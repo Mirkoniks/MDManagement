@@ -5,13 +5,25 @@
     <UserSecretsId>aspnet-MDManagement.Web-762FD823-C37E-4943-AC68-418CA6695CE1</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.2" />
+    <ProjectReference Include="..\..\Data\MDManagement.Data.Models\MDManagement.Data.Models.csproj" />
+    <ProjectReference Include="..\..\Data\MDManagement.Data\MDManagement.Data.csproj" />
+    <ProjectReference Include="..\..\MDManagement.Common\MDManagement.Common.csproj" />
+    <ProjectReference Include="..\..\Services\MDManagement.Services.Data\MDManagement.Services.Data.csproj" />
+    <ProjectReference Include="..\..\Services\MDManagement.Services\MDManagement.Services.csproj" />
+    <ProjectReference Include="..\MDManagement.Web.ViewModels\MDManagement.Web.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>
