@@ -4,42 +4,43 @@
     {
         public static class Adress
         {
-            public const int AddressMaxValue = 150;
+            public const int AddressMaxLength = 150;
         }
 
         public static class Company
         {
+            public const int NameMaxLength = 30;
+            public const int DescriptionMaxLength = 1000;
             public const int CompanyCodeMaxValue = 15;
-            public const int NameMaxValue = 30;
         }
 
         public static class Employee
         {
-            public const int NameMaxValue = 30;
+            public const int NameMaxLength = 30;
             public const string SalaryDeciamlSecifications = "decimal (18,4)";
         }
 
         public static class Department
         {
-            public const int NameMaxValue = 30;
+            public const int NameMaxLength = 30;
         }
 
         public static class JobTitle
         {
-            public const int NameMaxValue = 30;
-            public const int DescriptionMaxValue = 100;
+            public const int NameMaxLength = 30;
+            public const int DescriptionMaxLength = 100;
         }
 
         public static class Project
         {
-            public const int NameMaxValue = 30;
-            public const int DescriptionMaxValue = 100;
+            public const int NameMaxLength = 30;
+            public const int DescriptionMaxLength = 100;
         }
 
         public static class Town
         {
-            public const int NameMaxValue = 30;
-            public const int PostCodeMaxValue = 4;
+            public const int NameMaxLength = 30;
+            public const int PostCodeMaxLength = 4;
         }
     }
 }
