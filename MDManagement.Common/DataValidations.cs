@@ -13,7 +13,7 @@
             public const int NameMaxValue = 30;
         }
 
-        public static class ApplicarionUser
+        public static class Employee
         {
             public const int NameMaxValue = 30;
             public const string SalaryDeciamlSecifications = "decimal (18,4)";
