@@ -27,10 +27,10 @@ namespace MDManagement.Web
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<IdentityUser>(
+            services.AddDefaultIdentity<Employee>(
                 options =>
                 {
-                    options.SignIn.RequireConfirmedAccount = true;
+                    options.SignIn.RequireConfirmedAccount = false;
                 })
                 .AddEntityFrameworkStores<MDManagementDbContext>();
 

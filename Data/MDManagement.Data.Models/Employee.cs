@@ -31,17 +31,17 @@
         public DateTime HireDate { get; set; }
 
         [Column(TypeName = SalaryDeciamlSecifications)]
-        public decimal Salary { get; set; }
+        public decimal? Salary { get; set; }
 
-        public int CompanyId { get; set; }
+        public int? CompanyId { get; set; }
 
         public Company Company { get; set; }
 
-        public int JobTitleId { get; set; }
+        public int? JobTitleId { get; set; }
 
         public JobTitle JobTitle { get; set; }
 
-        public int DepartmentId { get; set; }
+        public int? DepartmentId { get; set; }
 
         public Department Department { get; set; }
 
