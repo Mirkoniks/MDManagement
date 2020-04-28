@@ -1,7 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Data\MDManagement.Data.Models\MDManagement.Data.Models.csproj" />
+    <ProjectReference Include="..\..\Data\MDManagement.Data\MDManagement.Data.csproj" />
+    <ProjectReference Include="..\MDManagement.Services.Data\MDManagement.Services.Data.csproj" />
+  </ItemGroup>
 
 </Project>

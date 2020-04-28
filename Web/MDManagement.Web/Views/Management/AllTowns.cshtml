@@ -1,0 +1,34 @@
+﻿@using MDManagement.Web.ViewModels.Management;
+@model AllTownsViewModel
+@{
+    ViewData["Title"] = "All";
+}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Post code
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var town in Model.Towns)
+            {
+                <tr>
+                    <th>
+                        @town.Name
+                    </th>
+                    <th>
+                        @town.PostCode
+                    </th>
+                    <th>
+                        <button class="btn btn-success"><a class="text-white" asp-action="UpdateTown" asp-controller="Management" asp-route-id="@town.Id">Edit</a></button>
+                    </th>
+                </tr>
+            }
+        </tbody>
+    </table>

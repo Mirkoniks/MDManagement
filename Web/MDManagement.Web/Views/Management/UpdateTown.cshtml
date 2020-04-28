@@ -1,0 +1,26 @@
+﻿@using MDManagement.Web.ViewModels.Management
+@model UpdateTownInputModel
+@{ 
+    ViewData["Title"] = "Update";
+}
+
+    <div class="row">
+        <div class=" col-md-6">
+            <form asp-action="UpdateTown" method="post">
+                <div>
+                    <label asp-for="NewName"></label>
+                    <input asp-for="NewName" class="form-control" />
+                    <span asp-validation-for="NewName" class="text-danger"></span>
+                </div>
+
+                <div>
+                    <label asp-for="NewPostCode"></label>
+                    <input asp-for="NewPostCode" class="form-control" />
+                    <span asp-validation-for="NewPostCode" class="text-danger"></span>
+                </div>
+
+                <input type="submit" class="btn btn-primary" />
+            </form>
+        </div>
+
+    </div>

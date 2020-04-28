@@ -1,0 +1,26 @@
+﻿@using MDManagement.Web.ViewModels.Management
+@model CreateTownInputModel
+@{ 
+    ViewData["Title"] = "Create";
+}
+
+    <div class="row">
+        <div class=" col-md-6">
+            <form asp-action="CreateTown" method="post">
+                <div>
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div>
+                    <label asp-for="PostCode"></label>
+                    <input asp-for="PostCode" class="form-control" />
+                    <span asp-validation-for="PostCode" class="text-danger"></span>
+                </div>
+
+                <input type="submit" class="btn btn-primary" />
+            </form>
+        </div>
+        
+    </div>

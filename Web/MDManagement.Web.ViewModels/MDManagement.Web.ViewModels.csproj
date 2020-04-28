@@ -4,4 +4,8 @@
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Data\MDManagement.Data.Models\MDManagement.Data.Models.csproj" />
+  </ItemGroup>
+
 </Project>

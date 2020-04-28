@@ -1,0 +1,29 @@
+﻿@using MDManagement.Web.ViewModels.LoggedHome;
+@model IndexViewModel
+@{
+    ViewData["Title"] = "Home Page";
+
+}
+
+<div class="text-center">
+    @if (!Model.HasFirm)
+    {
+
+        <div class="row">
+            <div class=" col-md-6">
+                <form asp-action="Index" method="post">
+                    <div>
+                        <label asp-for="CompanyCode"></label>
+                        <input asp-for="CompanyCode" class="form-control" />
+                        <span asp-validation-for="CompanyCode" class="text-danger"></span>
+                    </div>
+                    <input type="submit" class="btn btn-primary" />
+                </form>
+            </div>
+            <div class="col-md-6">
+                <a href="/Management/CompanyCreation" class="btn btn-info">Create Company</a>
+            </div>
+        </div>
+    }
+
+</div>

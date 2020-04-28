@@ -22,6 +22,7 @@
     <ProjectReference Include="..\..\Data\MDManagement.Data.Models\MDManagement.Data.Models.csproj" />
     <ProjectReference Include="..\..\Data\MDManagement.Data\MDManagement.Data.csproj" />
     <ProjectReference Include="..\..\MDManagement.Common\MDManagement.Common.csproj" />
+    <ProjectReference Include="..\..\MDManagement.Services.Models\MDManagement.Services.Models.csproj" />
     <ProjectReference Include="..\..\Services\MDManagement.Services.Data\MDManagement.Services.Data.csproj" />
     <ProjectReference Include="..\..\Services\MDManagement.Services\MDManagement.Services.csproj" />
     <ProjectReference Include="..\MDManagement.Web.ViewModels\MDManagement.Web.ViewModels.csproj" />

@@ -10,6 +10,10 @@ namespace MDManagement.Web
 
     using MDManagement.Web.Data;
     using MDManagement.Data.Models;
+    using MDManagement.Services;
+    using MDManagement.Services.Implementations;
+    using MDManagement.Services.Data;
+    using MDManagement.Services.Data.Implementations;
 
     public class Startup
     {
@@ -33,6 +37,16 @@ namespace MDManagement.Web
                     options.SignIn.RequireConfirmedAccount = false;
                 })
                 .AddEntityFrameworkStores<MDManagementDbContext>();
+
+            services.AddTransient<UserManager<Employee>>();
+            services.AddTransient<ITownDataService, TownDataService>();
+            services.AddTransient<ICompanyDataService, CompanyDataSerive>();
+            services.AddTransient<IJobTitleDataService, JobTittleDataServie>();
+            services.AddTransient<IEmployeeDataService, EmployeeDataService>();
+
+            services.AddTransient<IComapnyService, ComapnyService>();
+            services.AddTransient<IJobTitleService, JobTitleService>();
+            services.AddTransient<IEmployeeService, EmployeeService>();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
