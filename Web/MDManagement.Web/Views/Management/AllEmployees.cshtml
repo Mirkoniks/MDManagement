@@ -1,0 +1,62 @@
+﻿@using MDManagement.Web.ViewModels.Management
+@model AllEployeesViewModel
+
+@{
+    ViewData["Title"] = "AllEmployees";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                First Name
+            </th>
+            <th>
+                Middle Name
+            </th>
+            <th>
+                Last Name
+            </th>
+            <th>
+                Salary
+            </th>
+            <th>
+                Job Title
+            </th>
+            <th>
+                Department
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var employee in Model.Employees)
+        {
+            <tr>
+                <th>
+                    @employee.FirstName
+                </th>
+                <th>
+                    @employee.MiddleName
+                </th>
+                <th>
+                    @employee.LastName
+                </th>
+                <th>
+                    @employee.Salary
+                </th>
+                <th>
+                    @employee.JobTitle
+                </th>
+                <th>
+                    @employee.Department
+                </th>
+                <th>
+                    <a asp-controller="Management" asp-action="EditUser" asp-route-userid="@employee.EmployeeId">Edit User</a>
+                </th>
+                @*<th>
+                           <button class="btn btn-success"><a class="text-white" asp-action="UpdateTown" asp-controller="Management" asp-route-id="@town.Id">Edit</a></button>
+                    </th>*@
+            </tr>
+        }
+    </tbody>
+</table>

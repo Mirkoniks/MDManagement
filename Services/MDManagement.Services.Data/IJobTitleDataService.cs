@@ -8,7 +8,7 @@
 
         public JobTitleServiceModel FindByName(string name);
 
-        public void CreateJobTitile(CreateJobTitleServiceModel createJobTitleServiceModel);
+        public void CreateJobTitile(string name);
 
         public bool Exists(string jobTitle);
     }

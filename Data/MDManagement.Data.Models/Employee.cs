@@ -27,7 +27,6 @@
         [Required]
         public DateTime Birthdate { get; set; }
 
-        [Required]
         public DateTime HireDate { get; set; }
 
         [Column(TypeName = SalaryDeciamlSecifications)]
@@ -48,5 +47,11 @@
         public ICollection<EmployeeProject> EmployeeProjects { get; set; } = new HashSet<EmployeeProject>();
 
         public Address Address { get; set; }
+
+        public string ManagerId { get; set; }
+
+        public Employee Manager { get; set; }
+
+        public ICollection<Employee> Employees { get; set; }
     }
 }

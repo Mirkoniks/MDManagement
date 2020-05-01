@@ -12,14 +12,17 @@
         private readonly UserManager<Employee> userManager;
         private readonly IEmployeeDataService employeeService;
         private readonly ICompanyDataService companyService;
+        private readonly RoleManager<IdentityRole> roleManager;
 
         public LoggedHomeController(UserManager<Employee> userManager,
                                     IEmployeeDataService employeeService,
-                                    ICompanyDataService companyService)
+                                    ICompanyDataService companyService,
+                                    RoleManager<IdentityRole> roleManager)
         {
             this.userManager = userManager;
             this.employeeService = employeeService;
             this.companyService = companyService;
+            this.roleManager = roleManager;
         }
 
         public IActionResult Index()
@@ -50,7 +53,7 @@
         }
 
         [HttpPost]
-        public IActionResult Index(IndexViewModel indexInputModel)
+        public async System.Threading.Tasks.Task<IActionResult> IndexAsync(IndexViewModel indexInputModel)
         {
             if (ModelState.IsValid)
             {
@@ -75,6 +78,24 @@
                     };
 
                     employeeService.AddCompanyToEmployee(addCompanyToEmployeeServiceModel);
+
+                    string roleName = "Employee";
+
+                    bool roleExists = await roleManager.RoleExistsAsync(roleName);
+
+                    if (!roleExists)
+                    {
+                        var role = new IdentityRole();
+                        role.Name = roleName;
+                        await roleManager.CreateAsync(role);
+                    }
+
+                    var employeeId = userManager.GetUserId(this.User);
+                    
+                    var user = await employeeService.FindById(employeeId);
+
+                    await userManager.AddToRoleAsync(user, "Employee");
+
                 }
 
                 return RedirectToAction("Index");

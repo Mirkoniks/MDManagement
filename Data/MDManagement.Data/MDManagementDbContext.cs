@@ -74,6 +74,12 @@ namespace MDManagement.Web.Data
                 .HasForeignKey<Address>(a => a.EmployeeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<Employee>()
+                .HasMany(m => m.Employees)
+                .WithOne(e => e.Manager)
+                .HasForeignKey(e => e.ManagerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             base.OnModelCreating(builder);
         }
     }

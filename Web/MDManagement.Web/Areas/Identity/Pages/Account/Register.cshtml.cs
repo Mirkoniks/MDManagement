@@ -84,7 +84,7 @@
             public string MiddleName { get; set; }
 
             [Required]
-            [Display(Name = "Middle Name")]
+            [Display(Name = "Last Name")]
             [StringLength(NameMaxLength)]
             public string LastName { get; set; }
 

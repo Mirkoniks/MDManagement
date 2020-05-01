@@ -68,7 +68,6 @@
                 Description = model.Description,
                 CompanyCode = $"#{DateTime.UtcNow.Day}{DateTime.UtcNow.Hour}{DateTime.UtcNow.Minute}{DateTime.UtcNow.Millisecond}"
             };
-
             data.Companies.Add(company);
             data.SaveChanges();
         }

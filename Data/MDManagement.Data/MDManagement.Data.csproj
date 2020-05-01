@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200501125533_AlteHireDateTonull.cs" />
+    <Compile Remove="Migrations\20200501125533_AlteHireDateTonull.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="appsettings.json" />
   </ItemGroup>
 

@@ -1,20 +1,17 @@
 ﻿namespace MDManagement.Web.Controllers
 {
+    using System.Linq;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Identity;
     using MDManagement.Data.Models;
-    using MDManagement.Services;
     using MDManagement.Services.Data;
     using MDManagement.Services.Models.Company;
     using MDManagement.Services.Models.Employee;
     using MDManagement.Services.Models.JobTitle;
-    using MDManagement.Services.Models.Town;
     using MDManagement.Web.Data;
-    using MDManagement.Web.Data.Migrations;
     using MDManagement.Web.ViewModels.Management;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore.Internal;
-    using System.Collections.Generic;
-    using System.Linq;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Authorization;
 
     public class ManagementController : Controller
     {
@@ -24,13 +21,17 @@
         private readonly ICompanyDataService comapnyService;
         private readonly UserManager<Employee> userManager;
         private readonly IJobTitleDataService jobTitleService;
+        private readonly RoleManager<IdentityRole> roleManager;
+        private readonly IDepatmentDataService depatmentDataService;
 
         public ManagementController(ITownDataService townDataService,
                                     MDManagementDbContext data,
                                     IEmployeeDataService employeeService,
                                     ICompanyDataService comapnyService,
                                     UserManager<Employee> userManager,
-                                    IJobTitleDataService jobTitleService)
+                                    IJobTitleDataService jobTitleService,
+                                    RoleManager<IdentityRole> roleManager,
+                                    IDepatmentDataService depatmentDataService)
         {
             this.townDataService = townDataService;
             this.data = data;
@@ -38,6 +39,8 @@
             this.comapnyService = comapnyService;
             this.userManager = userManager;
             this.jobTitleService = jobTitleService;
+            this.roleManager = roleManager;
+            this.depatmentDataService = depatmentDataService;
         }
 
 
@@ -48,7 +51,7 @@
         }
 
         [HttpPost]
-        public IActionResult CompanyCreation(CompanyCreationInputModel companyCreationInputModel)
+        public async Task<IActionResult> CompanyCreationAsync(CompanyCreationInputModel companyCreationInputModel)
         {
             if (ModelState.IsValid)
             {
@@ -78,12 +81,7 @@
 
                     if (!jobTitleService.Exists(companyCreationInputModel.BossTitle))
                     {
-                        var createJobTitleServiceModel = new CreateJobTitleServiceModel()
-                        {
-                            Name = companyCreationInputModel.BossTitle.ToString()
-                        };
-
-                        jobTitleService.CreateJobTitile(createJobTitleServiceModel);
+                        jobTitleService.CreateJobTitile(companyCreationInputModel.BossTitle.ToString());
 
                         var companyId = jobTitleService.FindByName(companyCreationInputModel.BossTitle).Id;
 
@@ -108,26 +106,54 @@
                         employeeService.AddJobTitleToEployee(addJobTitleToEmployeServiceModel);
                     }
 
+
+                    string roleName = "Manager";
+
+                    bool roleExists = await roleManager.RoleExistsAsync(roleName);
+
+                    if (!roleExists)
+                    {
+                        var role = new IdentityRole();
+                        role.Name = roleName;
+                        await roleManager.CreateAsync(role);
+                    }
+
+                    var employeeId = userManager.GetUserId(this.User);
+                    
+                    var user = await employeeService.FindById(employeeId);
+
+                    await userManager.AddToRoleAsync(user, "Manager");
+
                     return this.RedirectToAction("Index", "Home");
                 }
-               
+
+
             }
             return View(companyCreationInputModel);
         }
 
+        [Authorize(Roles = "Manager")]
+        public IActionResult AllEmployees()
+        {
+            var userCompanyId = userManager.GetUserAsync(this.User).Result.CompanyId;
 
-        //int companyId = comapnyService.Register(companyCreationInputModel.Name, companyCreationInputModel.Description);
+            var allEmployeesViewModel = new AllEployeesViewModel()
+            {
+                Employees = employeeService.GetAllEmployees(userCompanyId).Select(e => new EmployeeViewModel
+                {
+                    EmployeeId = e.EmployeeId,
+                    FirstName = e.FirstName,
+                    MiddleName = e.MiddleName,
+                    LastName = e.LastName,
+                    Salary = e.Salary,
+                    JobTitle = e.JobTitle,
+                    Department = e.Department
+                })
+            };
 
-        //employeeDataService.AddCompanyToEmployee(companyCreationInputModel.CurrentEmployeeId, companyId);
+            return View(allEmployeesViewModel);
+        }
 
-        //employeeDataService.AddJobTitleToEmployee(companyCreationInputModel.CurrentEmployeeId, companyCreationInputModel.BossTitle);
-
-        //return this.RedirectToAction("Index","Home");
-
-
-
-
-        //--------------------------------------------------------------------------
         public IActionResult CreateTown()
         {
             return View();
@@ -186,6 +212,67 @@
             allTownsViewModel.Towns = toview;
 
             return View(allTownsViewModel);
+        }
+
+        public IActionResult EditUser(string userid)
+        {
+            var editUserViewModel = new EditUserViewModel()
+            {
+                UserId = userid
+            };
+
+            return View(editUserViewModel);
+        }
+
+        [HttpPost]
+        public IActionResult EditUser(EditUserViewModel model)
+        {
+            var editUserServiceModel = new EditUserServiceModel() 
+            { 
+                Salary = model.Salary,
+                HireDate = model.HireDate,
+            };
+
+            if (!jobTitleService.Exists(model.JobTitle))
+            {
+                jobTitleService.CreateJobTitile(model.JobTitle);
+
+                editUserServiceModel.JobTitleId = jobTitleService.FindByName(model.JobTitle).Id;
+            }
+            else
+            {
+                editUserServiceModel.JobTitleId = jobTitleService.FindByName(model.JobTitle).Id;
+            }
+
+
+            if (!depatmentDataService.Exists(model.Department))
+            {
+                depatmentDataService.Create(model.Department);
+
+                editUserServiceModel.DepartmentId = depatmentDataService.FindByName(model.Department).DepartmentId;
+            }
+            else
+            {
+                editUserServiceModel.DepartmentId = depatmentDataService.FindByName(model.Department).DepartmentId;
+            }
+
+
+            if (!employeeService.Exists(model.ManagerNickname))
+            {
+                ModelState.AddModelError("ManagerNickname", "Username is inavalid");
+
+                return View(model);
+            }
+            else
+            {
+                editUserServiceModel.ManagerId = employeeService.FindByNickname(model.ManagerNickname);
+            }
+
+            editUserServiceModel.EmployeeId = userManager.GetUserId(this.User);
+
+            employeeService.EditUserDetails(editUserServiceModel);
+
+            return this.RedirectToAction("Index", "Home");
         }
     }
 }

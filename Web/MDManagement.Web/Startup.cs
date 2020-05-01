@@ -36,9 +36,16 @@ namespace MDManagement.Web
                 {
                     options.SignIn.RequireConfirmedAccount = false;
                 })
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<MDManagementDbContext>();
 
+            //services.AddAuthorization( options => 
+            //{
+            //    options.AddPolicy("Test");
+            //});
+
             services.AddTransient<UserManager<Employee>>();
+            services.AddTransient<IDepatmentDataService, DepatmentDataService>();
             services.AddTransient<ITownDataService, TownDataService>();
             services.AddTransient<ICompanyDataService, CompanyDataSerive>();
             services.AddTransient<IJobTitleDataService, JobTittleDataServie>();

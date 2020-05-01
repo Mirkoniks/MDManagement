@@ -43,11 +43,11 @@
             return jtsm;
         }
 
-        public void CreateJobTitile(CreateJobTitleServiceModel createJobTitleServiceModel)
+        public void CreateJobTitile(string name)
         {
             JobTitle jobTitleToAdd = new JobTitle()
             {
-                Name = createJobTitleServiceModel.Name,
+                Name = name,
                 Description = "nothing for now",
             };
 
