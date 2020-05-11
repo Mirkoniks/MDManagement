@@ -10,21 +10,30 @@
     {
         private readonly MDManagementDbContext data;
 
-        public JobTittleDataServie(MDManagementDbContext data)
+        public JobTittleDataServie(MDManagementDbContext data
+                                    )
         {
             this.data = data;
         }
 
-        public JobTitleServiceModel FindById(int id)
+        public JobTitleServiceModel FindById(int? id)
         {
+            var jtsm = new JobTitleServiceModel();
+
+            if (!Exists(id))
+            {
+                jtsm.Id = 0;
+                jtsm.Name = " ";
+                jtsm.Description = "Nothing For Now";
+
+                return jtsm;
+            }
+
             var jobTile = data.JobTitles.Where(jt => jt.Id == id).FirstOrDefault();
 
-            var jtsm = new JobTitleServiceModel()
-            {
-                Id = jobTile.Id,
-                Name = jobTile.Name,
-                Description = jobTile.Description
-            };
+            jtsm.Id = jobTile.Id;
+            jtsm.Name = jobTile.Name;
+            jtsm.Description = "Nothing For Now";
 
             return jtsm;
         }
@@ -60,5 +69,9 @@
             return data.JobTitles.Any(j => j.Name.ToLower() == jobTitle.ToLower());
         }
 
+        public bool Exists(int? jobId)
+        {
+            return data.JobTitles.Any(j => j.Id == jobId);
+        }
     }
 }

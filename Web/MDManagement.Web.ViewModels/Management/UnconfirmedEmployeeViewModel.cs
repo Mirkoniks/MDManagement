@@ -1,10 +1,8 @@
-﻿using MDManagement.Data.Models;
-using System.Collections;
-using System.Collections.Generic;
-
-namespace MDManagement.Web.ViewModels.Management
+﻿namespace MDManagement.Web.ViewModels.Management
 {
-    public class EmployeeViewModel
+    using System;
+
+    public class UnconfirmedEmployeeViewModel
     {
         public string EmployeeId { get; set; }
 
@@ -14,12 +12,18 @@ namespace MDManagement.Web.ViewModels.Management
 
         public string LastName { get; set; }
 
+        public DateTime HireDate { get; set; }
+
         public decimal? Salary { get; set; }
+
+        public string Town { get; set; }
+
+        public string Address { get; set; }
 
         public string JobTitle { get; set; }
 
         public string Department { get; set; }
 
-        public IEnumerable<EmployeeViewModel> Subordinates { get; set; }
+        public string Manager { get; set; }
     }
 }

@@ -4,7 +4,7 @@
 
     public interface ICompanyDataService
     {
-        public CompanyServiceModel FindById(int id);
+        public CompanyServiceModel FindById(int? id);
 
         public CompanyServiceModel FindByName(string name);
 

@@ -28,7 +28,34 @@
 
         public bool Exists(string departmentName)
         {
-            return data.Departments.Any(d => d.Name == departmentName);
+            return data.Departments.Any(d => d.Name.ToLower() == departmentName.ToLower());
+        }
+
+        public bool Exists(int? id)
+        {
+            return data.Departments.Any(d => d.Id == id);
+
+        }
+
+        public DepartmentServiceModel FindById(int? id)
+        {
+            if (!Exists(id))
+            {
+                return new DepartmentServiceModel
+                {
+                    DepartmentId = 0,
+                    DepartmentName = " "
+                };
+            }
+
+            return data.Departments
+                .Where(d => d.Id == id)
+                .Select(d => new DepartmentServiceModel 
+                {
+                    DepartmentId = d.Id,
+                    DepartmentName = d.Name
+                })
+                .FirstOrDefault();
         }
 
         public DepartmentServiceModel FindByName(string name)

@@ -6,8 +6,13 @@ namespace MDManagement.Services.Data
     {
         public bool Exists(string departmentName);
 
+        public bool Exists(int? id);
+
         public DepartmentServiceModel FindByName(string name);
 
         public void Create(string name);
+
+        public DepartmentServiceModel FindById(int? id);
+
     }
 }

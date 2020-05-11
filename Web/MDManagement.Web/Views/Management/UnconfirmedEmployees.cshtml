@@ -1,0 +1,77 @@
+﻿@using MDManagement.Web.ViewModels.Management;
+@model AllUnconfirmedEmployeeViewModel
+@{
+    ViewData["Title"] = "All";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                First Name
+            </th>
+            <th>
+                Middle Name
+            </th>
+            <th>
+                Last Name
+            </th>
+            <th>
+                Hire Date
+            </th>
+            <th>
+                Salary
+            </th>
+            <th>
+                Address
+            </th>
+            <th>
+                Job Title
+            </th>
+            <th>
+                Department
+            </th>
+            <th>
+                Manager
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.AllUnconfirmedEmployees)
+        {
+        <tr>
+            <th>
+                @user.FirstName
+            </th>
+            <th>
+                @user.MiddleName
+            </th>
+            <th>
+                @user.LastName
+            </th>
+            <th>
+                @user.HireDate
+            </th>
+            <th>
+                @user.Salary
+            </th>
+            <th>
+                @user.Town, @user.Address
+            </th>
+            <th>
+                @user.JobTitle
+            </th>
+            <th>
+                @user.Department
+            </th>
+            <th>
+                @user.Manager
+            </th>
+            <th>
+                <a asp-controller="Management" asp-action="ConfirmEmployee" asp-route-employeeId="@user.EmployeeId">View Details</a>
+            </th>
+        </tr>
+        }
+    </tbody>
+</table>

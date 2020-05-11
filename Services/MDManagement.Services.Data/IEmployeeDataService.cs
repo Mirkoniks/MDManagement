@@ -13,7 +13,7 @@
 
         public Task<Employee> FindById(string id);
 
-        public IEnumerable<EmployeeServiceModel> GetAllEmployees(int? companyId);
+        public IEnumerable<EmployeeServiceModel> GetAllEmployees(int? companyId,string userId);
 
         public Task<EditUserServiceModel> GetEmployeeByIdForEdit(string userId);
 
@@ -21,8 +21,19 @@
 
         public bool Exists(string userName);
 
+        public bool ExistsId(string id);
+
         public string FindByNickname(string nickName);
 
+        public string FindByIdTheUserName(string id);
+
+        public IEnumerable<UnconfirmedEmployeeServiceModel> GetAllUnconfirmedEmployees(int? companyCode);
+
+        public bool IsAddressNull(string employeeId);
+
+        public UnconfirmedEmployeeServiceModel GetUncoFirmedEmployee(string id);
+
+        public void ConfirmEmployee(string id);
 
 
         //public void AddEmployeeToCompany(string employeeId, string companyCode);

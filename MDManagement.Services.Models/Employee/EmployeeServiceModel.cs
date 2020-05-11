@@ -1,5 +1,9 @@
-﻿namespace MDManagement.Services.Models.Employee
+﻿
+namespace MDManagement.Services.Models.Employee
 {
+    using System.Collections.Generic;
+    using MDManagement.Data.Models;
+
     public class EmployeeServiceModel
     {
         public string EmployeeId { get; set; }
@@ -12,8 +16,10 @@
 
         public decimal? Salary { get; set; }
 
-        public string JobTitle { get; set; }
+        public int? JobTitleId { get; set; }
 
-        public string Department { get; set; }
+        public int? DepartmentId { get; set; }
+
+        public IEnumerable<EmployeeServiceModel> Employees { get; set; }
     }
 }

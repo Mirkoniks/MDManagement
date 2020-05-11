@@ -37,6 +37,12 @@ namespace MDManagement.Web.Controllers
             return View();
         }
 
+        public IActionResult HttpError(int statusCode)
+        {
+
+            return View(statusCode);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

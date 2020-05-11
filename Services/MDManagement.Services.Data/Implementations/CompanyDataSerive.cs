@@ -15,7 +15,7 @@
             this.data = data;
         }
 
-        public CompanyServiceModel FindById(int id)
+        public CompanyServiceModel FindById(int? id)
         {
             var company = data.Companies.Where(c => c.Id == id).FirstOrDefault();
 

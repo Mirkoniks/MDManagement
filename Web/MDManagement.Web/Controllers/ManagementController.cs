@@ -23,6 +23,7 @@
         private readonly IJobTitleDataService jobTitleService;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IDepatmentDataService depatmentDataService;
+        private readonly IAddressDataService addressDataService;
 
         public ManagementController(ITownDataService townDataService,
                                     MDManagementDbContext data,
@@ -31,7 +32,8 @@
                                     UserManager<Employee> userManager,
                                     IJobTitleDataService jobTitleService,
                                     RoleManager<IdentityRole> roleManager,
-                                    IDepatmentDataService depatmentDataService)
+                                    IDepatmentDataService depatmentDataService,
+                                    IAddressDataService addressDataService)
         {
             this.townDataService = townDataService;
             this.data = data;
@@ -41,6 +43,7 @@
             this.jobTitleService = jobTitleService;
             this.roleManager = roleManager;
             this.depatmentDataService = depatmentDataService;
+            this.addressDataService = addressDataService;
         }
 
 
@@ -119,7 +122,7 @@
                     }
 
                     var employeeId = userManager.GetUserId(this.User);
-                    
+
                     var user = await employeeService.FindById(employeeId);
 
                     await userManager.AddToRoleAsync(user, "Manager");
@@ -136,89 +139,45 @@
         public IActionResult AllEmployees()
         {
             var userCompanyId = userManager.GetUserAsync(this.User).Result.CompanyId;
+            var userId = userManager.GetUserId(this.User);
+
 
             var allEmployeesViewModel = new AllEployeesViewModel()
             {
-                Employees = employeeService.GetAllEmployees(userCompanyId).Select(e => new EmployeeViewModel
+                Employees = employeeService.GetAllEmployees(userCompanyId, userId)
+                .Select(e => new EmployeeViewModel
                 {
                     EmployeeId = e.EmployeeId,
                     FirstName = e.FirstName,
                     MiddleName = e.MiddleName,
                     LastName = e.LastName,
                     Salary = e.Salary,
-                    JobTitle = e.JobTitle,
-                    Department = e.Department
+                    JobTitle = jobTitleService.FindById(e.JobTitleId).Name,
+                    Department = depatmentDataService.FindById(e.DepartmentId).DepartmentName,
+                    Subordinates = e.Employees.Select(e => new EmployeeViewModel
+                    {
+                        EmployeeId = e.EmployeeId,
+                        FirstName = e.FirstName,
+                        MiddleName = e.MiddleName,
+                        LastName = e.LastName,
+                        Salary = e.Salary,
+                        JobTitle = jobTitleService.FindById(e.JobTitleId).Name,
+                        Department = depatmentDataService.FindById(e.DepartmentId).DepartmentName,
+                    })
+                    .ToArray()
                 })
+                .ToArray()
             };
 
             return View(allEmployeesViewModel);
         }
 
-        public IActionResult CreateTown()
-        {
-            return View();
-        }
-
-        //Town createing
-
-        [HttpPost]
-        public IActionResult CreateTown(CreateTownInputModel createTownInputModel)
-        {
-
-            string name = createTownInputModel.Name;
-            int postCode = createTownInputModel.PostCode;
-
-            townDataService.Create(name, postCode);
-
-            return View(createTownInputModel);
-        }
-
-        public IActionResult DeleteTown()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult DeleteTown(DeleteTownInputModel deleteTownInputModel)
-        {
-            var name = deleteTownInputModel.Name;
-
-            townDataService.Delete(name);
-
-            return View(deleteTownInputModel);
-        }
-
-        public IActionResult UpdateTown()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult UpdateTown(UpdateTownInputModel updateTownInputModel, int townId)
-        {
-            townDataService.Update(townId, updateTownInputModel.NewName, updateTownInputModel.NewPostCode);
-
-            return View(updateTownInputModel);
-        }
-
-        public IActionResult AllTowns()
-        {
-            AllTownsViewModel allTownsViewModel = new AllTownsViewModel();
-
-            var towns = townDataService.GetAllTowns();
-
-            var toview = towns.Select(t => new TownViewModel { Name = t.Name, PostCode = t.PostCode });
-
-            allTownsViewModel.Towns = toview;
-
-            return View(allTownsViewModel);
-        }
-
-        public IActionResult EditUser(string userid)
+        [HttpGet]
+        public IActionResult EditUser(string employeeId)
         {
             var editUserViewModel = new EditUserViewModel()
             {
-                UserId = userid
+                EmployeeId = employeeId
             };
 
             return View(editUserViewModel);
@@ -227,53 +186,184 @@
         [HttpPost]
         public IActionResult EditUser(EditUserViewModel model)
         {
-            var editUserServiceModel = new EditUserServiceModel() 
-            { 
-                Salary = model.Salary,
-                HireDate = model.HireDate,
+            if (ModelState.IsValid)
+            {
+                var editUserServiceModel = new EditUserServiceModel()
+                {
+                    Salary = model.Salary,
+                    HireDate = model.HireDate,
+                };
+
+                if (!jobTitleService.Exists(model.JobTitle))
+                {
+                    jobTitleService.CreateJobTitile(model.JobTitle);
+
+                    editUserServiceModel.JobTitleId = jobTitleService.FindByName(model.JobTitle).Id;
+                }
+                else
+                {
+                    editUserServiceModel.JobTitleId = jobTitleService.FindByName(model.JobTitle).Id;
+                }
+
+
+                if (!depatmentDataService.Exists(model.Department))
+                {
+                    depatmentDataService.Create(model.Department);
+
+                    editUserServiceModel.DepartmentId = depatmentDataService.FindByName(model.Department).DepartmentId;
+                }
+                else
+                {
+                    editUserServiceModel.DepartmentId = depatmentDataService.FindByName(model.Department).DepartmentId;
+                }
+
+
+                if (!employeeService.Exists(model.ManagerNickname))
+                {
+                    ModelState.AddModelError("ManagerNickname", "Username is inavalid");
+
+                    return View(model);
+                }
+                else
+                {
+                    editUserServiceModel.ManagerId = employeeService.FindByNickname(model.ManagerNickname);
+                }
+
+                editUserServiceModel.EmployeeId = model.EmployeeId;
+
+                employeeService.EditUserDetails(editUserServiceModel);
+
+                return this.RedirectToAction("Index", "Home");
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult UnconfirmedEmployees()
+        {
+            int? companyId = userManager.GetUserAsync(this.User).Result.CompanyId;
+
+            var allUnconfirmedEmployeesViewModel = new AllUnconfirmedEmployeeViewModel
+            {
+                AllUnconfirmedEmployees = employeeService.GetAllUnconfirmedEmployees(companyId)
+                .Select(u => new UnconfirmedEmployeeViewModel
+                {
+                    EmployeeId = u.EmployeeId,
+                    FirstName = u.FirstName,
+                    MiddleName = u.MiddleName,
+                    LastName = u.LastName,
+                    Salary = u.Salary,
+                    HireDate = u.HireDate,
+                    Town = townDataService.FindById(addressDataService.FindById(u.AdressId).TownId).Name,
+                    Address = addressDataService.FindById(u.AdressId).AddressText,
+                    JobTitle = jobTitleService.FindById(u.JobTitleId).Name,
+                    Department = depatmentDataService.FindById(u.DepartmentId).DepartmentName,
+                    Manager = employeeService.FindByIdTheUserName(u.ManagerId),
+                })
+                .ToArray()
             };
 
-            if (!jobTitleService.Exists(model.JobTitle))
-            {
-                jobTitleService.CreateJobTitile(model.JobTitle);
-
-                editUserServiceModel.JobTitleId = jobTitleService.FindByName(model.JobTitle).Id;
-            }
-            else
-            {
-                editUserServiceModel.JobTitleId = jobTitleService.FindByName(model.JobTitle).Id;
-            }
-
-
-            if (!depatmentDataService.Exists(model.Department))
-            {
-                depatmentDataService.Create(model.Department);
-
-                editUserServiceModel.DepartmentId = depatmentDataService.FindByName(model.Department).DepartmentId;
-            }
-            else
-            {
-                editUserServiceModel.DepartmentId = depatmentDataService.FindByName(model.Department).DepartmentId;
-            }
-
-
-            if (!employeeService.Exists(model.ManagerNickname))
-            {
-                ModelState.AddModelError("ManagerNickname", "Username is inavalid");
-
-                return View(model);
-            }
-            else
-            {
-                editUserServiceModel.ManagerId = employeeService.FindByNickname(model.ManagerNickname);
-            }
-
-            editUserServiceModel.EmployeeId = userManager.GetUserId(this.User);
-
-            employeeService.EditUserDetails(editUserServiceModel);
-
-            return this.RedirectToAction("Index", "Home");
+            return View(allUnconfirmedEmployeesViewModel);
         }
+
+        [HttpPost]
+        public IActionResult UnconfirmedEmployees(string employeeId)
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ConfirmEmployee(string employeeId)
+        {
+            var user = employeeService.GetUncoFirmedEmployee(employeeId);
+
+            var UnconfirmedEmployeeViewModel = new ConfirmEmployeeViewModel()
+            {
+                EmployeeId = user.EmployeeId,
+                FirstName = user.FirstName,
+                MiddleName = user.MiddleName,
+                LastName = user.LastName,
+                HireDate = user.HireDate,
+                Salary = user.Salary,
+                Town = townDataService.FindById(addressDataService.FindById(user.AdressId).TownId).Name,
+                Address = addressDataService.FindById(user.AdressId).AddressText,
+                JobTitle = jobTitleService.FindById(user.JobTitleId).Name,
+                Department = depatmentDataService.FindById(user.DepartmentId).DepartmentName,
+                ManagerNickname = employeeService.FindByIdTheUserName(user.ManagerId)
+            };
+
+            return View(UnconfirmedEmployeeViewModel);
+        }
+
+        [HttpPost]
+        public IActionResult ConfirmEmployee(ConfirmEmployeeViewModel model)
+        {
+            employeeService.ConfirmEmployee(model.EmployeeId);
+
+            return RedirectToAction("UnconfirmedEmployees", "Management");
+        }
+
+        ////////////////////////////////
+        public IActionResult CreateTown()
+        {
+            return View();
+        }
+
+        //Town createing
+
+        //[HttpPost]
+        //public IActionResult CreateTown(CreateTownInputModel createTownInputModel)
+        //{
+
+        //    string name = createTownInputModel.Name;
+        //    int postCode = createTownInputModel.PostCode;
+
+        //    townDataService.Create(name, postCode);
+
+        //    return View(createTownInputModel);
+        //}
+
+        //public IActionResult DeleteTown()
+        //{
+        //    return View();
+        //}
+
+        //[HttpPost]
+        //public IActionResult DeleteTown(DeleteTownInputModel deleteTownInputModel)
+        //{
+        //    var name = deleteTownInputModel.Name;
+
+        //    townDataService.Delete(name);
+
+        //    return View(deleteTownInputModel);
+        //}
+
+        //public IActionResult UpdateTown()
+        //{
+        //    return View();
+        //}
+
+        //[HttpPost]
+        //public IActionResult UpdateTown(UpdateTownInputModel updateTownInputModel, int townId)
+        //{
+        //    townDataService.Update(townId, updateTownInputModel.NewName, updateTownInputModel.NewPostCode);
+
+        //    return View(updateTownInputModel);
+        //}
+
+        //public IActionResult AllTowns()
+        //{
+        //    AllTownsViewModel allTownsViewModel = new AllTownsViewModel();
+
+        //    var towns = townDataService.GetAllTowns();
+
+        //    var toview = towns.Select(t => new TownViewModel { Name = t.Name, PostCode = t.PostCode });
+
+        //    allTownsViewModel.Towns = toview;
+
+        //    return View(allTownsViewModel);
+        //}
+
     }
 }
 

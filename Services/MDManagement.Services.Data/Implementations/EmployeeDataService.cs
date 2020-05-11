@@ -14,13 +14,15 @@
     {
         private readonly MDManagementDbContext data;
         private readonly IJobTitleDataService jobTitleDataService;
+        private readonly ICompanyDataService companyDataService;
 
         public EmployeeDataService(MDManagementDbContext data,
-                                   IJobTitleDataService jobTitleDataService)
+                                   IJobTitleDataService jobTitleDataService,
+                                   ICompanyDataService companyDataService)
         {
             this.data = data;
             this.jobTitleDataService = jobTitleDataService;
-
+            this.companyDataService = companyDataService;
         }
         public void AddCompanyToEmployee(AddCompanyToEmployeeServiceModel model)
         {
@@ -39,10 +41,13 @@
             return await data.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
         }
 
-        public IEnumerable<EmployeeServiceModel> GetAllEmployees(int? companyId)
+
+
+        public IEnumerable<EmployeeServiceModel> GetAllEmployees(int? companyId, string userId)
         {
-            return data.Users
-                .Where(u => u.CompanyId == companyId)
+            var user = data.Users
+                .Where(u => u.CompanyId == companyId
+                       && u.ManagerId == userId)
                 .Select(e => new EmployeeServiceModel
                 {
                     EmployeeId = e.Id,
@@ -50,16 +55,29 @@
                     MiddleName = e.MiddleName,
                     LastName = e.LastName,
                     Salary = e.Salary,
-                    JobTitle = e.JobTitle.Name,
-                    Department = e.Department.Name
+                    JobTitleId = e.JobTitleId,
+                    DepartmentId = e.DepartmentId,
+                    Employees = e.Employees.Select(e => new EmployeeServiceModel
+                    {
+                        EmployeeId = e.Id,
+                        FirstName = e.FirstName,
+                        MiddleName = e.MiddleName,
+                        LastName = e.LastName,
+                        Salary = e.Salary,
+                        JobTitleId = e.JobTitleId,
+                        DepartmentId = e.DepartmentId
+                    })
+                    .ToArray()
                 })
                 .ToArray();
+
+            return user;
         }
 
         public async Task<EditUserServiceModel> GetEmployeeByIdForEdit(string userId)
         {
             return await data.Users.Where(u => u.Id == userId)
-                .Select(e => new EditUserServiceModel 
+                .Select(e => new EditUserServiceModel
                 {
                     EmployeeId = e.Id,
                     HireDate = e.HireDate,
@@ -74,27 +92,104 @@
         public void EditUserDetails(EditUserServiceModel model)
         {
             var user = data.Users.Where(e => e.Id == model.EmployeeId).FirstOrDefault();
-           
+
             user.HireDate = model.HireDate;
             user.Salary = model.Salary;
             user.JobTitleId = model.JobTitleId;
             user.DepartmentId = model.DepartmentId;
             user.ManagerId = model.ManagerId;
 
-            data.Users.Update(user);
 
             data.SaveChanges();
         }
 
         public bool Exists(string userName)
         {
-           return data.Users.Any(u => u.UserName == userName);
+            return data.Users.Any(u => u.UserName == userName);
+        }
+
+
+        public bool ExistsId(string Id)
+        {
+            return data.Users.Any(u => u.Id == Id);
         }
 
         public string FindByNickname(string nickName)
         {
             return data.Users.Where(u => u.UserName == nickName).FirstOrDefault().Id;
         }
+
+        public IEnumerable<UnconfirmedEmployeeServiceModel> GetAllUnconfirmedEmployees(int? companyId)
+        {
+            var companyCode = companyDataService.FindById(companyId).CompanyCode;
+
+            var user = data.Users
+               .Where(u => u.IsCompanyConfirmed == false
+                      && u.Company.CompanyCode == companyCode)
+               .Select(u => new UnconfirmedEmployeeServiceModel
+               {
+                   EmployeeId = u.Id,
+                   FirstName = u.FirstName,
+                   MiddleName = u.MiddleName,
+                   LastName = u.LastName,
+                   HireDate = u.HireDate,
+                   Salary = u.Salary,
+                   AdressId = u.Address.Id,
+                   JobTitleId = u.JobTitle.Id,
+                   DepartmentId = u.Department.Id,
+                   ManagerId = u.ManagerId
+               })
+               .ToArray();
+
+            return user;
+        }
+
+        public UnconfirmedEmployeeServiceModel GetUncoFirmedEmployee(string id)
+        {
+            var employee = data.Users
+                .Where(u => u.Id == id)
+                .Select(u => new UnconfirmedEmployeeServiceModel
+                {
+                    EmployeeId = u.Id,
+                    FirstName = u.FirstName,
+                    MiddleName = u.MiddleName,
+                    LastName = u.LastName,
+                    HireDate = u.HireDate,
+                    Salary = u.Salary,
+                    AdressId = u.Address.Id,
+                    JobTitleId = u.JobTitle.Id,
+                    DepartmentId = u.Department.Id,
+                    ManagerId = u.ManagerId,
+                    IsEmployeeConfirmed = u.IsCompanyConfirmed
+                })
+                .FirstOrDefault();
+
+            return employee;
+        }
+
+        public bool IsAddressNull(string employeeId)
+        {
+            return data.Users.Where(e => e.Id == employeeId).FirstOrDefault().Address == null;
+        }
+
+        public string FindByIdTheUserName(string id)
+        {
+            if (!ExistsId(id))
+            {
+                return " ";
+            }
+
+            return data.Users.Where(u => u.Id == id).FirstOrDefault().UserName;
+        }
+
+        public void ConfirmEmployee(string id)
+        {
+            data.Users.Where(u => u.Id == id).FirstOrDefault().IsCompanyConfirmed = true;
+
+            data.SaveChanges();
+        }
+
+
 
         //public void AddEmployeeToCompany(string employeeId, string companyCode)
         //{

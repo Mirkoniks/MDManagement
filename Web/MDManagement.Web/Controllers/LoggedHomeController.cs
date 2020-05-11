@@ -6,6 +6,7 @@
     using MDManagement.Web.ViewModels.LoggedHome;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using System.Threading.Tasks;
 
     public class LoggedHomeController : Controller
     {
@@ -46,14 +47,11 @@
                     indexViewModel.HasFirm = true;
                 }
             }
-
-
-
             return View(indexViewModel);
         }
 
         [HttpPost]
-        public async System.Threading.Tasks.Task<IActionResult> IndexAsync(IndexViewModel indexInputModel)
+        public async Task<IActionResult> IndexAsync(IndexViewModel indexInputModel)
         {
             if (ModelState.IsValid)
             {
@@ -102,5 +100,7 @@
             }
             return View(indexInputModel);
         }
+
+
     }
 }

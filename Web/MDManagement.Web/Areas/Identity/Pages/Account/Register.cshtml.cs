@@ -18,6 +18,11 @@
     using Microsoft.Extensions.Logging;
 
     using static MDManagement.Common.DataValidations.Employee;
+    using System.Runtime.CompilerServices;
+    using MDManagement.Services.Data;
+    using MDManagement.Services.Models.Town;
+    using MDManagement.Services.Models.Address;
+    using System.Security.Claims;
 
     [AllowAnonymous]
     public class RegisterModel : PageModel
@@ -26,17 +31,23 @@
         private readonly UserManager<Employee> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IAddressDataService addressDataService;
+        private readonly ITownDataService townDataService;
 
         public RegisterModel(
             UserManager<Employee> userManager,
             SignInManager<Employee> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IAddressDataService addressDataService,
+            ITownDataService townDataService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            this.addressDataService = addressDataService;
+            this.townDataService = townDataService;
         }
 
         [BindProperty]
@@ -91,6 +102,18 @@
             [Required]
             [Display(Name = "Phone number")]
             public int PhoneNumber { get; set; }
+
+            [Required]
+            [Display(Name = "Town")]
+            public string Town { get; set; }
+
+            [Required]
+            [Display(Name = "Post Code")]
+            public int PostCode { get; set; }
+
+            [Required]
+            [Display(Name = "Address")]
+            public string AddressText { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -105,14 +128,42 @@
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new Employee 
-                { 
-                    UserName = Input.UserName, Email = Input.Email, Birthdate = Input.BirthDate,
-                    FirstName = Input.FirstName, MiddleName = Input.MiddleName, LastName = Input.LastName 
+                //REGISTERING TOWN AND ADDREES
+                //TO DO: 
+                var createTownServiceModel = new CreateTownServiceModel()
+                {
+                    Name = Input.Town,
+                    PostCode = Input.PostCode
                 };
+
+                townDataService.Create(createTownServiceModel);
+
+                var townId = townDataService.FindByName(Input.Town).Id;
+
+                var createAddressServiceModel = new CreateAddressServiceModel()
+                {
+                    AddressText = Input.AddressText,
+                    TownId = townId
+                };
+
+                addressDataService.Create(createAddressServiceModel);
+
+                var addressId = addressDataService.FindByName(Input.AddressText).AddressId;
+
+                var user = new Employee
+                {
+                    UserName = Input.UserName,
+                    Email = Input.Email,
+                    Birthdate = Input.BirthDate,
+                    FirstName = Input.FirstName,
+                    MiddleName = Input.MiddleName,
+                    LastName = Input.LastName,
+                };
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -132,7 +183,20 @@
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                      await _signInManager.SignInAsync(user, isPersistent: false);
+
+                        //ADDING employee to an address
+
+
+                        var addEmployeeToAddressServiceModel = new AddEmployeeToAddressServiceModel()
+                        {
+                            AddressId = addressId,
+                            EmployeeId = user.Id
+                        };
+
+                        addressDataService.AddEmployeeToAddress(addEmployeeToAddressServiceModel);   
+
+                        /////////////////////////////////////////
                         return LocalRedirect(returnUrl);
                     }
                 }

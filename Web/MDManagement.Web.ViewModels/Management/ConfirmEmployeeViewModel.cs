@@ -1,22 +1,31 @@
 ﻿namespace MDManagement.Web.ViewModels.Management
 {
     using System;
-    using System.ComponentModel.DataAnnotations;
-    using System.Diagnostics.CodeAnalysis;
 
-    public class EditUserViewModel
+    public class ConfirmEmployeeViewModel
     {
         public string EmployeeId { get; set; }
+
+        public string FirstName { get; set; }
+
+        public string MiddleName { get; set; }
+
+        public string LastName { get; set; }
 
         public DateTime HireDate { get; set; }
 
         public decimal? Salary { get; set; }
 
+        public string Town { get; set; }
+
+        public string Address { get; set; }
+
         public string JobTitle { get; set; }
 
-        [Required]       
         public string Department { get; set; }
 
         public string ManagerNickname { get; set; }
+
+        public bool IsEmployeeConfirmed { get; set; }
     }
 }

@@ -17,94 +17,27 @@
             this.data = data;
         }
 
-        public void Create(string name, int postCode)
+        public void Create(CreateTownServiceModel town)
         {
-            if (!Exists(name))
+            var townToAdd = new Town()
             {
-                Town town = new Town
-                {
-                    Name = name,
-                    PostCode = postCode
-                };
+                Name = town.Name,
+                PostCode = town.PostCode
+            };
 
-                data.Towns.Add(town);
+            data.Towns.Add(townToAdd);
 
-                data.SaveChanges();
-            }   
+            data.SaveChanges();
         }
 
         public bool Exists(string townName)
         {
-            return data.Towns.Any(t => t.Name == townName);
+            return data.Towns.Any(t => t.Name.ToLower() == townName.ToLower());
         }
 
-        public TownServiceModel FindTownByName(string townName)
+        public TownServiceModel FindById(int id)
         {
-            return data.Towns
-                   .Where(n => n.Name == townName)
-                   .Select(t => new TownServiceModel
-                   {
-                       Name = t.Name,
-                       PostCode = t.PostCode
-                   }
-                 ).FirstOrDefault();
-        }
-
-        public IEnumerable<TownServiceModel> GetAllTowns()
-        {
-            return data
-                .Towns
-                .Select(t => new TownServiceModel()
-                {
-                    Name = t.Name,
-                    PostCode = t.PostCode
-                })
-                .ToArray();
-        }
-
-        public void Delete(string townName)
-        {
-            var town = data.Towns.Where(n => n.Name == townName).FirstOrDefault();
-
-            if (town != null)
-            {
-                data.Towns.Remove(town);
-                data.SaveChanges();
-            }
-        }
-
-        public void Update(int townId, string newTownName)
-        {
-            var town = FindTownById(townId);
-
-            if (town != null)
-            {
-                town.Name = newTownName;
-
-                data.Update(town);
-
-                data.SaveChanges();
-            }
-        }
-
-        public void Update(int townId, string newTownName, int newPostCode)
-        {
-            var town = FindTownById(townId);
-
-            if (town != null)
-            {
-                town.Name = newTownName;
-                town.PostCode = newPostCode;
-
-                data.Update(town);
-
-                data.SaveChanges();
-            }
-        }
-
-        public TownServiceModel FindTownById(int id)
-        {
-            return data.Towns
+            var town = data.Towns
                 .Where(t => t.Id == id)
                 .Select(t => new TownServiceModel
                 {
@@ -113,6 +46,21 @@
                     PostCode = t.PostCode
                 })
                 .FirstOrDefault();
-        } 
+
+            return town;
+        }
+
+        public TownServiceModel FindByName(string name)
+        {
+            return data.Towns
+                .Where(t => t.Name == name)
+                .Select(t => new TownServiceModel
+                {
+                    Id = t.Id,
+                    Name = t.Name,
+                    PostCode = t.PostCode
+                })
+                .FirstOrDefault();
+        }
     }
 }

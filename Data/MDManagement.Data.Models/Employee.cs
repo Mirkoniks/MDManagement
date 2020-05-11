@@ -53,5 +53,7 @@
         public Employee Manager { get; set; }
 
         public ICollection<Employee> Employees { get; set; }
+
+        public bool IsCompanyConfirmed { get; set; }
     }
 }

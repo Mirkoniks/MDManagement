@@ -31,32 +31,32 @@
     <tbody>
         @foreach (var employee in Model.Employees)
         {
-            <tr>
-                <th>
-                    @employee.FirstName
-                </th>
-                <th>
-                    @employee.MiddleName
-                </th>
-                <th>
-                    @employee.LastName
-                </th>
-                <th>
-                    @employee.Salary
-                </th>
-                <th>
-                    @employee.JobTitle
-                </th>
-                <th>
-                    @employee.Department
-                </th>
-                <th>
-                    <a asp-controller="Management" asp-action="EditUser" asp-route-userid="@employee.EmployeeId">Edit User</a>
-                </th>
-                @*<th>
-                           <button class="btn btn-success"><a class="text-white" asp-action="UpdateTown" asp-controller="Management" asp-route-id="@town.Id">Edit</a></button>
-                    </th>*@
-            </tr>
+            @foreach (var user in employee.Subordinates)
+            {
+                <tr>
+                    <th>
+                        @user.FirstName
+                    </th>
+                    <th>
+                        @user.MiddleName
+                    </th>
+                    <th>
+                        @user.LastName
+                    </th>
+                    <th>
+                        @user.Salary
+                    </th>
+                    <th>
+                        @user.JobTitle
+                    </th>
+                    <th>
+                        @user.Department
+                    </th>
+                    <th>
+                        <a asp-controller="Management" asp-action="EditUser" asp-route-employeeId="@user.EmployeeId">Edit User</a>
+                    </th>
+                </tr>
+            }
         }
     </tbody>
 </table>
