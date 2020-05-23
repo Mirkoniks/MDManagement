@@ -154,6 +154,7 @@
                     Salary = e.Salary,
                     JobTitle = jobTitleService.FindById(e.JobTitleId).Name,
                     Department = depatmentDataService.FindById(e.DepartmentId).DepartmentName,
+                    IsCompanyConfirmed = e.IsCompanyConfirmed,
                     Subordinates = e.Employees.Select(e => new EmployeeViewModel
                     {
                         EmployeeId = e.EmployeeId,
@@ -163,6 +164,7 @@
                         Salary = e.Salary,
                         JobTitle = jobTitleService.FindById(e.JobTitleId).Name,
                         Department = depatmentDataService.FindById(e.DepartmentId).DepartmentName,
+                        IsCompanyConfirmed = e.IsCompanyConfirmed
                     })
                     .ToArray()
                 })
@@ -173,11 +175,24 @@
         }
 
         [HttpGet]
-        public IActionResult EditUser(string employeeId)
+        public async Task<IActionResult> EditUserAsync(string employeeId)
         {
+            var employee = await employeeService.FindById(employeeId);
+
+
             var editUserViewModel = new EditUserViewModel()
             {
-                EmployeeId = employeeId
+                EmployeeId = employeeId,
+                FirstName = employee.FirstName,
+                MiddleName = employee.MiddleName,
+                LastName = employee.LastName,
+                HireDate = employee.HireDate,
+                Salary = employee.Salary,
+                JobTitle = jobTitleService.FindById(employee.JobTitleId).Name,
+                Department = depatmentDataService.FindById(employee.DepartmentId).DepartmentName,
+                ManagerNickname = employeeService.FindById(employee.ManagerId).Result.UserName,
+                IsEmployee = userManager.IsInRoleAsync(employee, "Employee").Result,
+                IsManager = userManager.IsInRoleAsync(employee, "Manger").Result,
             };
 
             return View(editUserViewModel);
@@ -190,8 +205,13 @@
             {
                 var editUserServiceModel = new EditUserServiceModel()
                 {
+                    FirstName = model.FirstName,
+                    MiddleName = model.MiddleName,
+                    LastName = model.LastName,
                     Salary = model.Salary,
                     HireDate = model.HireDate,
+                    IsEmployee = model.IsEmployee,
+                    IsManager = model.IsManager
                 };
 
                 if (!jobTitleService.Exists(model.JobTitle))

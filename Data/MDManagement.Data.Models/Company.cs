@@ -22,5 +22,7 @@
         public string CompanyCode { get; set; }
 
         public ICollection<Employee> Employees { get; set; } = new HashSet<Employee>();
+
+        public ICollection<Project> Projects { get; set; } = new HashSet<Project>();
     }
 }

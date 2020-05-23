@@ -2,7 +2,7 @@
 @model AllEployeesViewModel
 
 @{
-    ViewData["Title"] = "AllEmployees";
+    ViewData["Title"] = "All Employees";
 }
 
 <table class="table">
@@ -33,29 +33,35 @@
         {
             @foreach (var user in employee.Subordinates)
             {
-                <tr>
-                    <th>
-                        @user.FirstName
-                    </th>
-                    <th>
-                        @user.MiddleName
-                    </th>
-                    <th>
-                        @user.LastName
-                    </th>
-                    <th>
-                        @user.Salary
-                    </th>
-                    <th>
-                        @user.JobTitle
-                    </th>
-                    <th>
-                        @user.Department
-                    </th>
-                    <th>
-                        <a asp-controller="Management" asp-action="EditUser" asp-route-employeeId="@user.EmployeeId">Edit User</a>
-                    </th>
-                </tr>
+                if (!user.IsCompanyConfirmed == false)
+                {
+                    <tr>
+                        <th>
+                            @user.FirstName
+                        </th>
+                        <th>
+                            @user.MiddleName
+                        </th>
+                        <th>
+                            @user.LastName
+                        </th>
+                        <th>
+                            @user.Salary
+                        </th>
+                        <th>
+                            @user.JobTitle
+                        </th>
+                        <th>
+                            @user.Department
+                        </th>
+                        <th>
+                            <a asp-controller="Project" asp-action="Assign" asp-route-employeeId="@user.EmployeeId">Assign a task</a>
+                        </th>
+                        <th>
+                            <a asp-controller="Management" asp-action="EditUser" asp-route-employeeId="@user.EmployeeId">Edit User</a>
+                        </th>
+                    </tr>
+                }
             }
         }
     </tbody>

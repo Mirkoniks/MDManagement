@@ -20,6 +20,8 @@ namespace MDManagement.Services.Models.Employee
 
         public int? DepartmentId { get; set; }
 
+        public bool IsCompanyConfirmed { get; set; }
+
         public IEnumerable<EmployeeServiceModel> Employees { get; set; }
     }
 }

@@ -51,6 +51,7 @@ namespace MDManagement.Web
             services.AddTransient<IJobTitleDataService, JobTittleDataServie>();
             services.AddTransient<IEmployeeDataService, EmployeeDataService>();
             services.AddTransient<IAddressDataService, AddressDataService>();
+            services.AddTransient<IProjectDataService, ProjectDataService>();
 
             services.AddTransient<IComapnyService, ComapnyService>();
             services.AddTransient<IJobTitleService, JobTitleService>();

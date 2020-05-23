@@ -24,6 +24,14 @@
         [Required]
         public DateTime EndDate { get; set; }
 
+        public bool IsCompleated { get; set; }
+
+        public string ProjectCode { get; set; }
+
         public ICollection<EmployeeProject> EmployeeProjects { get; set; } = new HashSet<EmployeeProject>();
+
+        public int? CompanyId { get; set; }
+
+        public Company Company { get; set; }
     }
 }

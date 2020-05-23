@@ -42,6 +42,12 @@ namespace MDManagement.Web.Data
                 .HasForeignKey(e => e.CompanyId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<Company>()
+                .HasMany(c => c.Projects)
+                .WithOne(p => p.Company)
+                .HasForeignKey(p => p.CompanyId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<JobTitle>()
                 .HasMany(jt => jt.Employees)
                 .WithOne(e => e.JobTitle)

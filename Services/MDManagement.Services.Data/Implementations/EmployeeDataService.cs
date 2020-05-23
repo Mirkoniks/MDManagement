@@ -7,6 +7,7 @@
     using MDManagement.Data.Models;
     using MDManagement.Services.Models.Employee;
     using MDManagement.Web.Data;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
 
@@ -15,14 +16,17 @@
         private readonly MDManagementDbContext data;
         private readonly IJobTitleDataService jobTitleDataService;
         private readonly ICompanyDataService companyDataService;
+        private readonly UserManager<Employee> userManager;
 
         public EmployeeDataService(MDManagementDbContext data,
                                    IJobTitleDataService jobTitleDataService,
-                                   ICompanyDataService companyDataService)
+                                   ICompanyDataService companyDataService,
+                                   UserManager<Employee> userManager)
         {
             this.data = data;
             this.jobTitleDataService = jobTitleDataService;
             this.companyDataService = companyDataService;
+            this.userManager = userManager;
         }
         public void AddCompanyToEmployee(AddCompanyToEmployeeServiceModel model)
         {
@@ -47,7 +51,8 @@
         {
             var user = data.Users
                 .Where(u => u.CompanyId == companyId
-                       && u.ManagerId == userId)
+                       && u.ManagerId == userId
+                       )
                 .Select(e => new EmployeeServiceModel
                 {
                     EmployeeId = e.Id,
@@ -57,6 +62,7 @@
                     Salary = e.Salary,
                     JobTitleId = e.JobTitleId,
                     DepartmentId = e.DepartmentId,
+                    IsCompanyConfirmed = e.IsCompanyConfirmed,
                     Employees = e.Employees.Select(e => new EmployeeServiceModel
                     {
                         EmployeeId = e.Id,
@@ -65,7 +71,8 @@
                         LastName = e.LastName,
                         Salary = e.Salary,
                         JobTitleId = e.JobTitleId,
-                        DepartmentId = e.DepartmentId
+                        DepartmentId = e.DepartmentId,
+                        IsCompanyConfirmed = e.IsCompanyConfirmed
                     })
                     .ToArray()
                 })
@@ -93,11 +100,23 @@
         {
             var user = data.Users.Where(e => e.Id == model.EmployeeId).FirstOrDefault();
 
+            user.FirstName = model.FirstName;
+            user.MiddleName = model.MiddleName;
+            user.LastName = model.LastName;
             user.HireDate = model.HireDate;
             user.Salary = model.Salary;
             user.JobTitleId = model.JobTitleId;
             user.DepartmentId = model.DepartmentId;
             user.ManagerId = model.ManagerId;
+
+            if (model.IsManager)
+            {
+                userManager.AddToRoleAsync(user, "Manager");
+            }
+            else if(model.IsEmployee)
+            {
+                userManager.AddToRoleAsync(user, "Employee");
+            }
 
 
             data.SaveChanges();

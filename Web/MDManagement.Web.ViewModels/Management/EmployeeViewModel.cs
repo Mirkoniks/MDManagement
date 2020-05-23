@@ -20,6 +20,8 @@ namespace MDManagement.Web.ViewModels.Management
 
         public string Department { get; set; }
 
+        public bool IsCompanyConfirmed { get; set; }
+
         public IEnumerable<EmployeeViewModel> Subordinates { get; set; }
     }
 }
