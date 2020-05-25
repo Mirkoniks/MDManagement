@@ -17,7 +17,7 @@
 
         public Task<EditUserServiceModel> GetEmployeeByIdForEdit(string userId);
 
-        public void EditUserDetails(EditUserServiceModel model);
+        public void EditUserDetailsAsync(EditUserServiceModel model);
 
         public bool Exists(string userName);
 

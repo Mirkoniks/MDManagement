@@ -1,0 +1,81 @@
+﻿@using MDManagement.Web.ViewModels.Project;
+@model AllProjectsViewModel
+@{
+    ViewData["Title"] = "All Projects";
+}
+
+@if (Model.AllProjects.FirstOrDefault().Id != 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Start Date
+                </th>
+                <th>
+                    End Date
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var project in Model.AllProjects)
+            {
+                <tr>
+                    <th>
+                        @project.Name
+                    </th>
+                    <th>
+                        @project.Description
+                    </th>
+                    <th>
+                        @project.StartDate.Date
+                    </th>
+                    <th>
+                        @project.EndDate.Date
+                    </th>
+                    <th>
+                        @if (User.IsInRole("Manager"))
+                        {
+                            <button class="btn btn-success"><a class="text-white" asp-action="Edit" asp-controller="Project" asp-route-projectId="@project.Id">Edit</a></button>
+                        }
+                    </th>
+                    <th>
+                        <button class="btn btn-success"><a class="text-white" asp-action="Info" asp-controller="Project" asp-route-projectId="@project.Id">Info</a></button>
+                    </th>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Start Date
+                </th>
+                <th>
+                    End Date
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+}
+

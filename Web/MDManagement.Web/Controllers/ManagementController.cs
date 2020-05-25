@@ -251,7 +251,7 @@
 
                 editUserServiceModel.EmployeeId = model.EmployeeId;
 
-                employeeService.EditUserDetails(editUserServiceModel);
+                employeeService.EditUserDetailsAsync(editUserServiceModel);
 
                 return this.RedirectToAction("Index", "Home");
             }

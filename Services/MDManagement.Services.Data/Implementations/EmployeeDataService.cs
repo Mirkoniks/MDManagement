@@ -96,7 +96,7 @@
                 .FirstOrDefaultAsync();
         }
 
-        public void EditUserDetails(EditUserServiceModel model)
+        public void EditUserDetailsAsync(EditUserServiceModel model)
         {
             var user = data.Users.Where(e => e.Id == model.EmployeeId).FirstOrDefault();
 
@@ -111,11 +111,13 @@
 
             if (model.IsManager)
             {
+                //userManager.RemoveFromRoleAsync(user, "Employee");
                 userManager.AddToRoleAsync(user, "Manager");
             }
-            else if(model.IsEmployee)
+            else if (model.IsEmployee)
             {
-                userManager.AddToRoleAsync(user, "Employee");
+                userManager.RemoveFromRoleAsync(user, "Manager");
+                //userManager.AddToRoleAsync(user, "Employee");
             }
 
 

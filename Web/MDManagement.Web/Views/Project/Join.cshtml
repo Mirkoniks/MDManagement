@@ -1,0 +1,18 @@
+﻿@using MDManagement.Web.ViewModels.Project;
+@model JoinViewModel
+@{
+    ViewData["Title"] = "Join";
+}
+
+    <div class="row">
+        <div class="col-md-6 justify-content-center text-center">
+            <form asp-action="Join" method="post">
+                <div>
+                    <label asp-for="ProjectCode"></label>
+                    <input asp-for="ProjectCode" class="form-control" />
+                    <span asp-validation-for="ProjectCode" class="text-danger"></span>
+                </div>
+                <input type="submit" class="btn btn-primary" />
+            </form>
+        </div>
+    </div>

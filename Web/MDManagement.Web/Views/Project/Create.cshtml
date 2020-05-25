@@ -1,0 +1,44 @@
+﻿@using MDManagement.Web.ViewModels.Project
+@model CreateProjectViewModel
+@{
+    ViewData["Title"] = "Create a Project";
+}
+
+<div class="row">
+    <div class="col-md-6 justify-content-center text-center">
+        <form asp-action="Create" method="post">
+            <div>
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div>
+                <label asp-for="Description"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div>
+                <label asp-for="StartDate"></label>
+                <input asp-for="StartDate" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+
+            <div>
+                <label asp-for="EndDate"></label>
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+
+            <div>
+                <label asp-for="ProjectManagerNick"></label>
+                <input asp-for="ProjectManagerNick" class="form-control" />
+                <span asp-validation-for="ProjectManagerNick" class="text-danger"></span>
+            </div>
+
+            <input type="submit" class="btn btn-primary" />
+
+        </form>
+    </div>
+</div>

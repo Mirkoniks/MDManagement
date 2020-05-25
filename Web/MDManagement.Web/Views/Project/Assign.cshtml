@@ -1,0 +1,75 @@
+﻿@using MDManagement.Web.ViewModels.Project;
+@model AssignViewModel
+@{
+    ViewData["Title"] = "All Projects";
+}
+
+@if (Model.AllProjects.FirstOrDefault().Id != 0)
+{
+    
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Start Date
+                </th>
+                <th>
+                    End Date
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var project in Model.AllProjects)
+            {
+                <tr>
+                    <th>
+                        @project.Name
+                    </th>
+                    <th>
+                        @project.Description
+                    </th>
+                    <th>
+                        @project.StartDate.Date
+                    </th>
+                    <th>
+                        @project.EndDate.Date
+                    </th>
+                    <th>
+                        <button class="btn btn-success"><a class="text-white" asp-controller="Project" asp-action="AssignTo" asp-route-projectId="@project.Id" asp-route-employeeId="@Model.EmployeeId">Assign</a></button>
+                    </th>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Start Date
+                </th>
+                <th>
+                    End Date
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+}
+
