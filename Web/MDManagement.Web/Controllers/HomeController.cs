@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Identity;
 using MDManagement.Data.Models;
 using MDManagement.Web.ViewModels.LoggedHome;
 using MDManagement.Services.Data;
+using MDManagement.Web.Data;
+using MDManagement.Web.ViewModels.Home;
 
 namespace MDManagement.Web.Controllers
 {
@@ -17,19 +19,54 @@ namespace MDManagement.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<Employee> userManager;
+        private readonly MDManagementDbContext data;
+        private readonly ICompanyDataService companyDataService;
+        private readonly SignInManager<Employee> signInManager;
 
         public HomeController(ILogger<HomeController> logger,
-            UserManager<Employee> userManager
-            )
+            UserManager<Employee> userManager,
+            MDManagementDbContext data,
+            ICompanyDataService companyDataService,
+            SignInManager<Employee> signInManager)
         {
             _logger = logger;
             this.userManager = userManager;
+            this.data = data;
+            this.companyDataService = companyDataService;
+            this.signInManager = signInManager;
         }
 
 
         public IActionResult Index()
         {
-            return View();
+            HomeIndexViewModel model = new HomeIndexViewModel();
+
+            if (signInManager.IsSignedIn(User))
+            {
+                var user = userManager.GetUserAsync(this.User);
+
+
+                if (user != null)
+                {
+                    var companyId = user.Result.CompanyId;
+
+                    if (companyId == null)
+                    {
+                        model.HasFrim = false;
+                    }
+                    else
+                    {
+                        model.HasFrim = true;
+                        model.FirmName = companyDataService.FindById(companyId).Name;
+                    }
+                }
+
+                return View(model);
+            }
+            model.FirmName = "";
+            model.HasFrim = true;
+
+            return View(model);
         }
 
         public IActionResult Privacy()

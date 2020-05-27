@@ -81,5 +81,12 @@
         {
             return data.Companies.Any(c => c.CompanyCode == companyCode);
         }
+
+        public bool HasEmployees(int? companyId)
+        {
+            return data.Companies
+                .Where(c => c.Id == companyId)
+                .Any(c => c.Employees.Count > 0);
+        }
     }
 }

@@ -5,7 +5,7 @@
     ViewData["Title"] = "All Employees";
 }
 
-<table class="table">
+<table class="table table-primary">
     <thead>
         <tr>
             <th>
@@ -26,9 +26,15 @@
             <th>
                 Department
             </th>
+            <th>
+                Assign a task
+            </th>
+            <th>
+                Edit User
+            </th>
         </tr>
     </thead>
-    <tbody>
+    <tbody >
         @foreach (var employee in Model.Employees)
         {
             @foreach (var user in employee.Subordinates)
@@ -55,10 +61,10 @@
                             @user.Department
                         </th>
                         <th>
-                            <a asp-controller="Project" asp-action="Assign" asp-route-employeeId="@user.EmployeeId">Assign a task</a>
+                            <a  class="btn btn-primary btn-xl" asp-controller="Project" asp-action="Assign" asp-route-employeeId="@user.EmployeeId">Assign a task</a>
                         </th>
                         <th>
-                            <a asp-controller="Management" asp-action="EditUser" asp-route-employeeId="@user.EmployeeId">Edit User</a>
+                            <a class="btn btn-primary btn-xl" asp-controller="Management" asp-action="EditUser" asp-route-employeeId="@user.EmployeeId">Edit User</a>
                         </th>
                     </tr>
                 }

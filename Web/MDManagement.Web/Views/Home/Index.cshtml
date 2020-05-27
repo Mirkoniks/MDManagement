@@ -1,4 +1,6 @@
-﻿@{
+﻿@using MDManagement.Web.ViewModels.Home
+@model HomeIndexViewModel
+@{
     ViewData["Title"] = "Home Page";
 
 }
@@ -16,6 +18,11 @@
             <li data-target="#demo" data-slide-to="1"></li>
             <li data-target="#demo" data-slide-to="2"></li>
         </ul>
+
+        @if (Model.HasFrim != true)
+        {
+            <a class="btn btn-warning" asp-controller="LoggedHome" asp-action="Index">content</a>
+        }
 
         <!-- The slideshow -->
         <div class="carousel-inner">

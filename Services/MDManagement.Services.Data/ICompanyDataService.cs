@@ -15,5 +15,8 @@
         public bool IsValidCompany(string companyCode);
 
         public CompanyServiceModel FindByCompanyCode(string companyCode);
+
+        public bool HasEmployees(int? companyId);
+
     }
 }

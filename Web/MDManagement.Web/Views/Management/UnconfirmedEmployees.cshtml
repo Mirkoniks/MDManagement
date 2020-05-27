@@ -4,7 +4,7 @@
     ViewData["Title"] = "Unconfirmed Employees";
 }
 
-<table class="table">
+<table class="table table-primary">
     <thead>
         <tr>
             <th>
@@ -34,7 +34,9 @@
             <th>
                 Manager
             </th>
-
+            <th>
+                Details
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -69,7 +71,7 @@
                 @user.Manager
             </th>
             <th>
-                <a asp-controller="Management" asp-action="ConfirmEmployee" asp-route-employeeId="@user.EmployeeId">View Details</a>
+                <a class="btn btn-primary btn-xl"  asp-controller="Management" asp-action="ConfirmEmployee" asp-route-employeeId="@user.EmployeeId">View Details</a>
             </th>
         </tr>
         }

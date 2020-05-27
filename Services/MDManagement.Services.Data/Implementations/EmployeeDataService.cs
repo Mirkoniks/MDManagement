@@ -142,27 +142,41 @@
 
         public IEnumerable<UnconfirmedEmployeeServiceModel> GetAllUnconfirmedEmployees(int? companyId)
         {
-            var companyCode = companyDataService.FindById(companyId).CompanyCode;
+            if (companyDataService.HasEmployees(companyId))
+            {
+                var companyCode = companyDataService.FindById(companyId).CompanyCode;
 
-            var user = data.Users
-               .Where(u => u.IsCompanyConfirmed == false
-                      && u.Company.CompanyCode == companyCode)
-               .Select(u => new UnconfirmedEmployeeServiceModel
-               {
-                   EmployeeId = u.Id,
-                   FirstName = u.FirstName,
-                   MiddleName = u.MiddleName,
-                   LastName = u.LastName,
-                   HireDate = u.HireDate,
-                   Salary = u.Salary,
-                   AdressId = u.Address.Id,
-                   JobTitleId = u.JobTitle.Id,
-                   DepartmentId = u.Department.Id,
-                   ManagerId = u.ManagerId
-               })
-               .ToArray();
+                var user = data.Users
+                   .Where(u => u.IsCompanyConfirmed == false
+                          && u.Company.CompanyCode == companyCode)
+                   .Select(u => new UnconfirmedEmployeeServiceModel
+                   {
+                       EmployeeId = u.Id,
+                       FirstName = u.FirstName,
+                       MiddleName = u.MiddleName,
+                       LastName = u.LastName,
+                       HireDate = u.HireDate,
+                       Salary = u.Salary,
+                       AdressId = u.Address.Id,
+                       JobTitleId = u.JobTitle.Id,
+                       DepartmentId = u.Department.Id,
+                       ManagerId = u.ManagerId
+                   })
+                   .ToArray();
 
-            return user;
+                return user;
+            }
+
+            List<UnconfirmedEmployeeServiceModel> users = new List<UnconfirmedEmployeeServiceModel>();
+
+            var model = new UnconfirmedEmployeeServiceModel
+            {
+                FirstName = "no"
+            };
+
+            users.Add(model);
+
+            return users;
         }
 
         public UnconfirmedEmployeeServiceModel GetUncoFirmedEmployee(string id)

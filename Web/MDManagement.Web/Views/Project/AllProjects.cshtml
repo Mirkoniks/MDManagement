@@ -6,7 +6,7 @@
 
 @if (Model.AllProjects.FirstOrDefault().Id != 0)
 {
-    <table class="table">
+    <table class="table table-primary">
         <thead>
             <tr>
                 <th>
@@ -42,11 +42,11 @@
                     <th>
                         @if (User.IsInRole("Manager"))
                         {
-                            <button class="btn btn-success"><a class="text-white" asp-action="Edit" asp-controller="Project" asp-route-projectId="@project.Id">Edit</a></button>
+                           <a class=" btn btn-primary btn-xl"  asp-action="Edit" asp-controller="Project" asp-route-projectId="@project.Id">Edit</a>
                         }
                     </th>
                     <th>
-                        <button class="btn btn-success"><a class="text-white" asp-action="Info" asp-controller="Project" asp-route-projectId="@project.Id">Info</a></button>
+                       <a class="btn btn-primary btn-xl" asp-action="Info" asp-controller="Project" asp-route-projectId="@project.Id">Info</a>
                     </th>
                 </tr>
             }

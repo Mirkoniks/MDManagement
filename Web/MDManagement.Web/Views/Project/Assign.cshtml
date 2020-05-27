@@ -8,7 +8,7 @@
 {
     
 
-    <table class="table">
+    <table class="table table-primary">
         <thead>
             <tr>
                 <th>
@@ -42,7 +42,7 @@
                         @project.EndDate.Date
                     </th>
                     <th>
-                        <button class="btn btn-success"><a class="text-white" asp-controller="Project" asp-action="AssignTo" asp-route-projectId="@project.Id" asp-route-employeeId="@Model.EmployeeId">Assign</a></button>
+                        <a class="btn btn-primary btn-xl " asp-controller="Project" asp-action="AssignTo" asp-route-projectId="@project.Id" asp-route-employeeId="@Model.EmployeeId">Assign</a>
                     </th>
                 </tr>
             }
