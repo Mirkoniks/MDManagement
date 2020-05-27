@@ -23,7 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MDManagement.Services.Data"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MDManagement.Common", "MDManagement.Common\MDManagement.Common.csproj", "{B1D87CB2-47F2-4242-B072-152CADB35BA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MDManagement.Services.Models", "MDManagement.Services.Models\MDManagement.Services.Models.csproj", "{C0624C98-2ADD-41D5-B6E6-131ED6A8EB07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MDManagement.Services.Models", "MDManagement.Services.Models\MDManagement.Services.Models.csproj", "{C0624C98-2ADD-41D5-B6E6-131ED6A8EB07}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MDManagement.Tests", "MDManagement.Tests\MDManagement.Tests.csproj", "{B7FCCDA2-897D-404E-BEA3-52CD7945B66F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{C0624C98-2ADD-41D5-B6E6-131ED6A8EB07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0624C98-2ADD-41D5-B6E6-131ED6A8EB07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0624C98-2ADD-41D5-B6E6-131ED6A8EB07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7FCCDA2-897D-404E-BEA3-52CD7945B66F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7FCCDA2-897D-404E-BEA3-52CD7945B66F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7FCCDA2-897D-404E-BEA3-52CD7945B66F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7FCCDA2-897D-404E-BEA3-52CD7945B66F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

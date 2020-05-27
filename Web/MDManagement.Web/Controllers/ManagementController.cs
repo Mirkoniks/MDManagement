@@ -12,40 +12,34 @@
     using MDManagement.Web.ViewModels.Management;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Authorization;
+    using MDManagement.Services;
 
     public class ManagementController : Controller
     {
-        private readonly ITownDataService townDataService;
-        private readonly MDManagementDbContext data;
-        private readonly IEmployeeDataService employeeService;
+        private readonly IEmployeeService employeeService;
+        private readonly IEmployeeDataService employeeDataService;
         private readonly ICompanyDataService comapnyService;
         private readonly UserManager<Employee> userManager;
-        private readonly IJobTitleDataService jobTitleService;
-        private readonly RoleManager<IdentityRole> roleManager;
-        private readonly IDepatmentDataService depatmentDataService;
-        private readonly IAddressDataService addressDataService;
+        private readonly IJobTitleService jobTitleService;
 
         public ManagementController(ITownDataService townDataService,
                                     MDManagementDbContext data,
-                                    IEmployeeDataService employeeService,
+                                    IEmployeeService employeeService,
+                                    IEmployeeDataService employeeDataService,
                                     ICompanyDataService comapnyService,
                                     UserManager<Employee> userManager,
-                                    IJobTitleDataService jobTitleService,
+                                    IJobTitleService jobTitleService,
+                                    IJobTitleDataService jobTitleDataService,
                                     RoleManager<IdentityRole> roleManager,
                                     IDepatmentDataService depatmentDataService,
                                     IAddressDataService addressDataService)
         {
-            this.townDataService = townDataService;
-            this.data = data;
             this.employeeService = employeeService;
+            this.employeeDataService = employeeDataService;
             this.comapnyService = comapnyService;
             this.userManager = userManager;
             this.jobTitleService = jobTitleService;
-            this.roleManager = roleManager;
-            this.depatmentDataService = depatmentDataService;
-            this.addressDataService = addressDataService;
         }
-
 
         [HttpGet]
         public IActionResult CompanyCreation()
@@ -74,58 +68,22 @@
 
                     comapnyService.Create(createCompanyServiceModel);
 
+
                     var addCompanyToEmployeeServiceModel = new AddCompanyToEmployeeServiceModel()
                     {
                         CompanyId = comapnyService.FindByName(companyCreationInputModel.Name).Id,
                         EmployeeId = userManager.GetUserId(this.User)
                     };
 
-                    employeeService.AddCompanyToEmployee(addCompanyToEmployeeServiceModel);
+                    employeeDataService.AddCompanyToEmployee(addCompanyToEmployeeServiceModel);
 
-                    if (!jobTitleService.Exists(companyCreationInputModel.BossTitle))
-                    {
-                        jobTitleService.CreateJobTitile(companyCreationInputModel.BossTitle.ToString());
-
-                        var companyId = jobTitleService.FindByName(companyCreationInputModel.BossTitle).Id;
-
-                        var addJobTitleToEmployeServiceModel = new AddJobTitleToEmployeServiceModel()
-                        {
-                            EmployeeId = userManager.GetUserId(this.User),
-                            JobTitleId = companyId
-                        };
-
-                        employeeService.AddJobTitleToEployee(addJobTitleToEmployeServiceModel);
-                    }
-                    else
-                    {
-                        var companyId = jobTitleService.FindByName(companyCreationInputModel.BossTitle).Id;
-
-                        var addJobTitleToEmployeServiceModel = new AddJobTitleToEmployeServiceModel()
-                        {
-                            EmployeeId = userManager.GetUserId(this.User),
-                            JobTitleId = companyId
-                        };
-
-                        employeeService.AddJobTitleToEployee(addJobTitleToEmployeServiceModel);
-                    }
+                   
+                    var thisUser = this.User;
+                    jobTitleService.AddJobTitle(companyCreationInputModel.BossTitle, thisUser);
 
 
-                    string roleName = "Manager";
+                    await employeeService.AddManagerRole(thisUser);
 
-                    bool roleExists = await roleManager.RoleExistsAsync(roleName);
-
-                    if (!roleExists)
-                    {
-                        var role = new IdentityRole();
-                        role.Name = roleName;
-                        await roleManager.CreateAsync(role);
-                    }
-
-                    var employeeId = userManager.GetUserId(this.User);
-
-                    var user = await employeeService.FindById(employeeId);
-
-                    await userManager.AddToRoleAsync(user, "Manager");
 
                     return this.RedirectToAction("Index", "Home");
                 }
@@ -141,35 +99,7 @@
             var userCompanyId = userManager.GetUserAsync(this.User).Result.CompanyId;
             var userId = userManager.GetUserId(this.User);
 
-
-            var allEmployeesViewModel = new AllEployeesViewModel()
-            {
-                Employees = employeeService.GetAllEmployees(userCompanyId, userId)
-                .Select(e => new EmployeeViewModel
-                {
-                    EmployeeId = e.EmployeeId,
-                    FirstName = e.FirstName,
-                    MiddleName = e.MiddleName,
-                    LastName = e.LastName,
-                    Salary = e.Salary,
-                    JobTitle = jobTitleService.FindById(e.JobTitleId).Name,
-                    Department = depatmentDataService.FindById(e.DepartmentId).DepartmentName,
-                    IsCompanyConfirmed = e.IsCompanyConfirmed,
-                    Subordinates = e.Employees.Select(e => new EmployeeViewModel
-                    {
-                        EmployeeId = e.EmployeeId,
-                        FirstName = e.FirstName,
-                        MiddleName = e.MiddleName,
-                        LastName = e.LastName,
-                        Salary = e.Salary,
-                        JobTitle = jobTitleService.FindById(e.JobTitleId).Name,
-                        Department = depatmentDataService.FindById(e.DepartmentId).DepartmentName,
-                        IsCompanyConfirmed = e.IsCompanyConfirmed
-                    })
-                    .ToArray()
-                })
-                .ToArray()
-            };
+            var allEmployeesViewModel = employeeService.GetAllEmployees(userCompanyId, userId);
 
             return View(allEmployeesViewModel);
         }
@@ -177,23 +107,7 @@
         [HttpGet]
         public async Task<IActionResult> EditUserAsync(string employeeId)
         {
-            var employee = await employeeService.FindById(employeeId);
-
-
-            var editUserViewModel = new EditUserViewModel()
-            {
-                EmployeeId = employeeId,
-                FirstName = employee.FirstName,
-                MiddleName = employee.MiddleName,
-                LastName = employee.LastName,
-                HireDate = employee.HireDate,
-                Salary = employee.Salary,
-                JobTitle = jobTitleService.FindById(employee.JobTitleId).Name,
-                Department = depatmentDataService.FindById(employee.DepartmentId).DepartmentName,
-                ManagerNickname = employeeService.FindById(employee.ManagerId).Result.UserName,
-                IsEmployee = userManager.IsInRoleAsync(employee, "Employee").Result,
-                IsManager = userManager.IsInRoleAsync(employee, "Manger").Result,
-            };
+            var editUserViewModel = employeeService.EditUserAsync(employeeId).Result;
 
             return View(editUserViewModel);
         }
@@ -203,42 +117,9 @@
         {
             if (ModelState.IsValid)
             {
-                var editUserServiceModel = new EditUserServiceModel()
-                {
-                    FirstName = model.FirstName,
-                    MiddleName = model.MiddleName,
-                    LastName = model.LastName,
-                    Salary = model.Salary,
-                    HireDate = model.HireDate,
-                    IsEmployee = model.IsEmployee,
-                    IsManager = model.IsManager
-                };
+                var editUserServiceModel = employeeService.EditUser(model);
 
-                if (!jobTitleService.Exists(model.JobTitle))
-                {
-                    jobTitleService.CreateJobTitile(model.JobTitle);
-
-                    editUserServiceModel.JobTitleId = jobTitleService.FindByName(model.JobTitle).Id;
-                }
-                else
-                {
-                    editUserServiceModel.JobTitleId = jobTitleService.FindByName(model.JobTitle).Id;
-                }
-
-
-                if (!depatmentDataService.Exists(model.Department))
-                {
-                    depatmentDataService.Create(model.Department);
-
-                    editUserServiceModel.DepartmentId = depatmentDataService.FindByName(model.Department).DepartmentId;
-                }
-                else
-                {
-                    editUserServiceModel.DepartmentId = depatmentDataService.FindByName(model.Department).DepartmentId;
-                }
-
-
-                if (!employeeService.Exists(model.ManagerNickname))
+                if (!employeeDataService.Exists(model.ManagerNickname))
                 {
                     ModelState.AddModelError("ManagerNickname", "Username is inavalid");
 
@@ -246,12 +127,12 @@
                 }
                 else
                 {
-                    editUserServiceModel.ManagerId = employeeService.FindByNickname(model.ManagerNickname);
+                    editUserServiceModel.ManagerId = employeeDataService.FindByNickname(model.ManagerNickname);
                 }
 
                 editUserServiceModel.EmployeeId = model.EmployeeId;
 
-                employeeService.EditUserDetailsAsync(editUserServiceModel);
+                employeeDataService.EditUserDetailsAsync(editUserServiceModel);
 
                 return this.RedirectToAction("Index", "Home");
             }
@@ -263,25 +144,7 @@
         {
             int? companyId = userManager.GetUserAsync(this.User).Result.CompanyId;
 
-            var allUnconfirmedEmployeesViewModel = new AllUnconfirmedEmployeeViewModel
-            {
-                AllUnconfirmedEmployees = employeeService.GetAllUnconfirmedEmployees(companyId)
-                .Select(u => new UnconfirmedEmployeeViewModel
-                {
-                    EmployeeId = u.EmployeeId,
-                    FirstName = u.FirstName,
-                    MiddleName = u.MiddleName,
-                    LastName = u.LastName,
-                    Salary = u.Salary,
-                    HireDate = u.HireDate,
-                    Town = townDataService.FindById(addressDataService.FindById(u.AdressId).TownId).Name,
-                    Address = addressDataService.FindById(u.AdressId).AddressText,
-                    JobTitle = jobTitleService.FindById(u.JobTitleId).Name,
-                    Department = depatmentDataService.FindById(u.DepartmentId).DepartmentName,
-                    Manager = employeeService.FindByIdTheUserName(u.ManagerId),
-                })
-                .ToArray()
-            };
+            var allUnconfirmedEmployeesViewModel = employeeService.UnconfirmedEmployees(companyId);
 
             return View(allUnconfirmedEmployeesViewModel);
         }
@@ -295,95 +158,20 @@
         [HttpGet]
         public IActionResult ConfirmEmployee(string employeeId)
         {
-            var user = employeeService.GetUncoFirmedEmployee(employeeId);
 
-            var UnconfirmedEmployeeViewModel = new ConfirmEmployeeViewModel()
-            {
-                EmployeeId = user.EmployeeId,
-                FirstName = user.FirstName,
-                MiddleName = user.MiddleName,
-                LastName = user.LastName,
-                HireDate = user.HireDate,
-                Salary = user.Salary,
-                Town = townDataService.FindById(addressDataService.FindById(user.AdressId).TownId).Name,
-                Address = addressDataService.FindById(user.AdressId).AddressText,
-                JobTitle = jobTitleService.FindById(user.JobTitleId).Name,
-                Department = depatmentDataService.FindById(user.DepartmentId).DepartmentName,
-                ManagerNickname = employeeService.FindByIdTheUserName(user.ManagerId)
-            };
 
-            return View(UnconfirmedEmployeeViewModel);
+          var allUnconfirmedEmployeesViewModel = employeeService.ConfirmEmployee(employeeId);
+
+            return View(allUnconfirmedEmployeesViewModel);
         }
 
         [HttpPost]
         public IActionResult ConfirmEmployee(ConfirmEmployeeViewModel model)
         {
-            employeeService.ConfirmEmployee(model.EmployeeId);
+            employeeDataService.ConfirmEmployee(model.EmployeeId);
 
             return RedirectToAction("UnconfirmedEmployees", "Management");
         }
-
-        ////////////////////////////////
-        public IActionResult CreateTown()
-        {
-            return View();
-        }
-
-        //Town createing
-
-        //[HttpPost]
-        //public IActionResult CreateTown(CreateTownInputModel createTownInputModel)
-        //{
-
-        //    string name = createTownInputModel.Name;
-        //    int postCode = createTownInputModel.PostCode;
-
-        //    townDataService.Create(name, postCode);
-
-        //    return View(createTownInputModel);
-        //}
-
-        //public IActionResult DeleteTown()
-        //{
-        //    return View();
-        //}
-
-        //[HttpPost]
-        //public IActionResult DeleteTown(DeleteTownInputModel deleteTownInputModel)
-        //{
-        //    var name = deleteTownInputModel.Name;
-
-        //    townDataService.Delete(name);
-
-        //    return View(deleteTownInputModel);
-        //}
-
-        //public IActionResult UpdateTown()
-        //{
-        //    return View();
-        //}
-
-        //[HttpPost]
-        //public IActionResult UpdateTown(UpdateTownInputModel updateTownInputModel, int townId)
-        //{
-        //    townDataService.Update(townId, updateTownInputModel.NewName, updateTownInputModel.NewPostCode);
-
-        //    return View(updateTownInputModel);
-        //}
-
-        //public IActionResult AllTowns()
-        //{
-        //    AllTownsViewModel allTownsViewModel = new AllTownsViewModel();
-
-        //    var towns = townDataService.GetAllTowns();
-
-        //    var toview = towns.Select(t => new TownViewModel { Name = t.Name, PostCode = t.PostCode });
-
-        //    allTownsViewModel.Towns = toview;
-
-        //    return View(allTownsViewModel);
-        //}
-
     }
 }
 
