@@ -6,7 +6,7 @@
 }
 
 
-    <form asp-action="ConfirmEmployee" method="post">
+    <form asp-action="ConfirmEmployee" method="post" class="bg-primary p-4 rounded" >
         <div class="form-row">
             <div class="col-md-6">
                 <label asp-for="FirstName"></label>
@@ -58,12 +58,12 @@
         <div class="form-row form-group">
             <div class="offset-md-3 col-md-6 ">
                 <label asp-for="ManagerNickname"></label>
-                <input asp-for="ManagerNickname" class="form-control" disabled/>
+                <input asp-for="ManagerNickname" class="form-control" />
                 <span asp-validation-for="ManagerNickname" class="text-danger"></span>
             </div>
         </div>
        
-        <input type="hidden" asp-for="EmployeeId">
+        <input type="hidden" value="@Model.EmployeeId" asp-for="EmployeeId">
 
         <div>
             <input type="submit" class="btn btn-danger btn-xl" />

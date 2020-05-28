@@ -18,5 +18,6 @@
 
         public bool HasEmployees(int? companyId);
 
+
     }
 }

@@ -33,8 +33,23 @@
 
         public UnconfirmedEmployeeServiceModel GetUncoFirmedEmployee(string id);
 
-        public void ConfirmEmployee(string id);
+        public Task ConfirmEmployee(string id);
 
+        public Task RemoveEmployeeCompany(string emplolyeeId);
+
+        public Task RemoveEmployeeMnager(string employeeId);
+
+        public Task RemoveEmployeeDepartmentAsync(string emplolyeeId);
+
+        public Task RemoveEmployeeJobTitle(string emplolyeeId);
+
+        public Task RemoveEmployeeCompanyConfirmantion(string emplolyeeId);
+
+        public Task RemoveEmployeeProjects(string emplolyeeId);
+
+        public decimal? GetEmployeeSalary(string employeeId);
+
+        public Task SetManager(string managerId, string userId);
 
         //public void AddEmployeeToCompany(string employeeId, string companyCode);
 

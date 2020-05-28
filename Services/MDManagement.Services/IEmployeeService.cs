@@ -18,5 +18,7 @@
         public AllUnconfirmedEmployeeViewModel UnconfirmedEmployees(int? companyId);
 
         public ConfirmEmployeeViewModel ConfirmEmployee(string employeeId);
+
+        public Task RemoveEmployeeFromCompany(string employeeId);
     }
 }

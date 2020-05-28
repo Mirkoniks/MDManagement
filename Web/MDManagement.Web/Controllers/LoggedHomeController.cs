@@ -4,10 +4,12 @@
     using MDManagement.Services.Data;
     using MDManagement.Services.Models.Employee;
     using MDManagement.Web.ViewModels.LoggedHome;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;
 
+    [Authorize]
     public class LoggedHomeController : Controller
     {
         private readonly UserManager<Employee> userManager;

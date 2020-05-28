@@ -207,6 +207,16 @@
             return UnconfirmedEmployeeViewModel;
         }
 
+        public async Task RemoveEmployeeFromCompany(string employeeId)
+        {
+            await employeeDataService.RemoveEmployeeCompany(employeeId);
+            await employeeDataService.RemoveEmployeeCompanyConfirmantion(employeeId);
+            await employeeDataService.RemoveEmployeeDepartmentAsync(employeeId);
+            await employeeDataService.RemoveEmployeeJobTitle(employeeId);
+            await employeeDataService.RemoveEmployeeMnager(employeeId);
+            await employeeDataService.RemoveEmployeeProjects(employeeId);
+        }
+
     }
 }
 

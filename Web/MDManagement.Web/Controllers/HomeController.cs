@@ -12,6 +12,7 @@ using MDManagement.Web.ViewModels.LoggedHome;
 using MDManagement.Services.Data;
 using MDManagement.Web.Data;
 using MDManagement.Web.ViewModels.Home;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MDManagement.Web.Controllers
 {
@@ -35,7 +36,6 @@ namespace MDManagement.Web.Controllers
             this.companyDataService = companyDataService;
             this.signInManager = signInManager;
         }
-
 
         public IActionResult Index()
         {

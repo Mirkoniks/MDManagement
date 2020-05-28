@@ -78,7 +78,7 @@
 
                     employeeDataService.AddCompanyToEmployee(addCompanyToEmployeeServiceModel);
 
-                   
+
                     var thisUser = this.User;
                     jobTitleService.AddJobTitle(companyCreationInputModel.BossTitle, thisUser);
 
@@ -105,6 +105,7 @@
             return View(allEmployeesViewModel);
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpGet]
         public async Task<IActionResult> EditUserAsync(string employeeId)
         {
@@ -113,6 +114,7 @@
             return View(editUserViewModel);
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPost]
         public IActionResult EditUser(EditUserViewModel model)
         {
@@ -140,6 +142,7 @@
             return View(model);
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpGet]
         public IActionResult UnconfirmedEmployees()
         {
@@ -150,33 +153,52 @@
             return View(allUnconfirmedEmployeesViewModel);
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPost]
         public IActionResult UnconfirmedEmployees(string employeeId)
         {
             return View();
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpGet]
         public IActionResult ConfirmEmployee(string employeeId)
         {
 
 
-          var allUnconfirmedEmployeesViewModel = employeeService.ConfirmEmployee(employeeId);
+            var allUnconfirmedEmployeesViewModel = employeeService.ConfirmEmployee(employeeId);
 
             return View(allUnconfirmedEmployeesViewModel);
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPost]
-        public IActionResult ConfirmEmployee(ConfirmEmployeeViewModel model)
+        public async Task<IActionResult> ConfirmEmployeeAsync(ConfirmEmployeeViewModel model)
         {
-            employeeDataService.ConfirmEmployee(model.EmployeeId);
+            string managerId;
+            string userId = model.EmployeeId;
+
+            if (!employeeDataService.Exists(model.ManagerNickname))
+            {
+                ModelState.AddModelError("ManagerNickname", "Username is inavalid");
+
+                return View(model);
+            }
+            else
+            {
+                managerId = employeeDataService.FindByNickname(model.ManagerNickname);
+            }
+
+            await employeeDataService.SetManager(managerId, userId);
+            await employeeDataService.ConfirmEmployee(model.EmployeeId);
 
             return RedirectToAction("UnconfirmedEmployees", "Management");
         }
 
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> RemoveAsync(string employeeId)
         {
-           await employeeService.RemoveEmployeeFromCompany(employeeId);
+            await employeeService.RemoveEmployeeFromCompany(employeeId);
 
             return RedirectToAction("AllEmployees", "Management");
         }

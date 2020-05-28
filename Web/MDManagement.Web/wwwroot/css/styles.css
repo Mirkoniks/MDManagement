@@ -1,4 +1,4 @@
-@charset "UTF-8";
+﻿@charset "UTF-8";
 /*!
 * Start Bootstrap - Freelancer v6.0.3 (https://startbootstrap.com/themes/freelancer)
 * Copyright 2013-2020 Start Bootstrap
@@ -10258,4 +10258,10 @@ form .row:first-child .floating-label-form-group {
 
 .copyright {
   background-color: #1a252f;
+}
+
+#all {
+    background-image: url(/images/andreas-brucker-g5Uh7nP60FA-unsplash.jpg);
+    background-position: center; /* Center the image */
+    background-size: cover; /* Resize the background image to cover the entire container */
 }

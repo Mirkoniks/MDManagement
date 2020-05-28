@@ -217,11 +217,93 @@
             return data.Users.Where(u => u.Id == id).FirstOrDefault().UserName;
         }
 
-        public void ConfirmEmployee(string id)
+        public async Task ConfirmEmployee(string id)
         {
-            data.Users.Where(u => u.Id == id).FirstOrDefault().IsCompanyConfirmed = true;
+            data.Users.Where(u => u.Id == id)
+                .FirstOrDefaultAsync()
+                .Result
+                .IsCompanyConfirmed = true;
 
-            data.SaveChanges();
+          await  data.SaveChangesAsync();
+        }
+
+        public async Task RemoveEmployeeCompany(string emplolyeeId)
+        {
+            data.Users.Where(e => e.Id == emplolyeeId)
+                .FirstOrDefaultAsync()
+                .Result
+                .CompanyId = null;
+
+            await data.SaveChangesAsync();
+        }
+
+
+        public async Task RemoveEmployeeMnager(string emplolyeeId)
+        {
+            data.Users.Where(e => e.Id == emplolyeeId)
+                .FirstOrDefaultAsync()
+                .Result
+                .ManagerId = null;
+
+            await data.SaveChangesAsync();
+        }
+        public async Task RemoveEmployeeDepartmentAsync(string emplolyeeId)
+        {
+            data.Users.Where(e => e.Id == emplolyeeId)
+                .FirstOrDefaultAsync()
+                .Result
+                .DepartmentId = null;
+
+            await data.SaveChangesAsync();
+        }
+        public async Task RemoveEmployeeJobTitle(string emplolyeeId)
+        {
+            data.Users.Where(e => e.Id == emplolyeeId)
+                .FirstOrDefaultAsync()
+                .Result
+                .JobTitleId = null;
+
+            await data.SaveChangesAsync();
+        }
+
+        public async Task RemoveEmployeeCompanyConfirmantion(string emplolyeeId)
+        {
+            data.Users.Where(e => e.Id == emplolyeeId)
+                .FirstOrDefaultAsync()
+                .Result
+                .IsCompanyConfirmed = false;
+
+            await data.SaveChangesAsync();
+        }
+        public async Task RemoveEmployeeProjects(string emplolyeeId)
+        {
+            var employeesToDelete = data.EmployeeProjects.
+                Where(e => e.EmployeeId == emplolyeeId);
+
+            foreach (var employee in employeesToDelete)
+            {
+                data.EmployeeProjects.Remove(employee);
+            }
+
+           await data.SaveChangesAsync();
+        }
+
+        public decimal? GetEmployeeSalary(string employeeId)
+        {
+            return data.Users.Where(u => u.Id == employeeId)
+                .FirstOrDefaultAsync()
+                .Result
+                .Salary;
+        }
+
+        public async Task SetManager(string managerId, string userId)
+        {
+            data.Users.Where(e => e.Id == userId)
+                .FirstOrDefaultAsync()
+                .Result
+                .ManagerId = managerId;
+                
+          await data.SaveChangesAsync();
         }
 
 

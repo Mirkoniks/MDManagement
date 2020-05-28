@@ -11,7 +11,9 @@
     using MDManagement.Services.Models.Project;
     using MDManagement.Web.ViewModels.Management;
     using System.Collections.Generic;
+    using Microsoft.AspNetCore.Authorization;
 
+    [Authorize]
     public class ProjectController : Controller
     {
         private readonly IProjectDataService projectDataService;
@@ -33,6 +35,7 @@
             this.depatmentDataService = depatmentDataService;
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpGet]
         public IActionResult AllProjects()
         {
@@ -53,12 +56,14 @@
             return View(model);
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPost]
         public IActionResult Create(CreateProjectViewModel model)
         {
@@ -152,6 +157,7 @@
             return View(model);
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpGet]
         public IActionResult Assign(string employeeId)
         {
@@ -180,6 +186,7 @@
             return RedirectToAction("Assign", "Project", model1);
         }
 
+        [Authorize(Roles = "Manager")]
         public IActionResult AssignTo(int projectId, string employeeId)
         {
             if (ModelState.IsValid)
@@ -201,6 +208,7 @@
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager")]
         public IActionResult Edit(int projectId)
         {
             var project = projectDataService.FindProjectById(projectId);
@@ -219,6 +227,7 @@
         }
 
         [HttpPost]
+        [Authorize(Roles = "Manager")]
         public IActionResult Edit(EditViewModel model)
         {
             var serviceModel = new ProjectServiceModel
