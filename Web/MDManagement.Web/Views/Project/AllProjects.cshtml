@@ -1,81 +1,88 @@
 ﻿@using MDManagement.Web.ViewModels.Project;
+@inject Microsoft.AspNetCore.Identity.UserManager<MDManagement.Data.Models.Employee> UserManager
 @model AllProjectsViewModel
 @{
     ViewData["Title"] = "All Projects";
 }
 
-@if (Model.AllProjects.FirstOrDefault().Id != 0)
+<div class="row mb-5">
+    <div class="offset-md-3 col-md-6">
+        <a class="btn btn-warning btn-xl " asp-controller="Project" asp-action="Create"> Create a Project</a>
+    </div>
+</div>
+
+@if (Model.AllProjects.Any(x => x.Id > 0) && UserManager.GetUserAsync(User).Result.CompanyId != null )
 {
-    <table class="table table-primary">
-        <thead>
+<table class="table table-primary">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Start Date
+            </th>
+            <th>
+                End Date
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var project in Model.AllProjects)
+        {
             <tr>
                 <th>
-                    Name
+                    @project.Name
                 </th>
                 <th>
-                    Description
+                    @project.Description
                 </th>
                 <th>
-                    Start Date
+                    @project.StartDate.Date
                 </th>
                 <th>
-                    End Date
+                    @project.EndDate.Date
+                </th>
+                <th>
+                    @if (User.IsInRole("Manager"))
+                    {
+                        <a class=" btn btn-primary btn-xl" asp-action="Edit" asp-controller="Project" asp-route-projectId="@project.Id">Edit</a>
+                    }
+                </th>
+                <th>
+                    <a class="btn btn-primary btn-xl" asp-action="Info" asp-controller="Project" asp-route-projectId="@project.Id">Info</a>
                 </th>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var project in Model.AllProjects)
-            {
-                <tr>
-                    <th>
-                        @project.Name
-                    </th>
-                    <th>
-                        @project.Description
-                    </th>
-                    <th>
-                        @project.StartDate.Date
-                    </th>
-                    <th>
-                        @project.EndDate.Date
-                    </th>
-                    <th>
-                        @if (User.IsInRole("Manager"))
-                        {
-                           <a class=" btn btn-primary btn-xl"  asp-action="Edit" asp-controller="Project" asp-route-projectId="@project.Id">Edit</a>
-                        }
-                    </th>
-                    <th>
-                       <a class="btn btn-primary btn-xl" asp-action="Info" asp-controller="Project" asp-route-projectId="@project.Id">Info</a>
-                    </th>
-                </tr>
-            }
-        </tbody>
-    </table>
+        }
+    </tbody>
+</table>
 
 
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Name
-                </th>
-                <th>
-                    Description
-                </th>
-                <th>
-                    Start Date
-                </th>
-                <th>
-                    End Date
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+<table class="table table-primary">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Start Date
+            </th>
+            <th>
+                End Date
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
 }
 

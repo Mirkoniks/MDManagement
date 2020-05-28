@@ -11,7 +11,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MDManagement</title>
+    <title>@ViewData["Title"] - MDManagement &trade;</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 
@@ -31,7 +31,7 @@
     <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
         <div class="container">
             <a class="navbar-brand js-scroll-trigger" asp-area="" asp-controller="Home" asp-action="Index">
-                MDManagement @companyNameHtml
+                MDManagement &trade; @companyNameHtml
                 @if (SignInManager.IsSignedIn(User))
                 {
                     if (UserManager.GetUserAsync(User).Result.CompanyId != null)
@@ -42,7 +42,7 @@
                     }
                 }
 
-            </a><button class="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">MDManagement<i class="fas fa-bars"></i></button>
+            </a><button class="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">MDManagement &trade;<i class="fas fa-bars"></i></button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
                     @if (this.User.IsInRole("Manager"))
@@ -57,7 +57,7 @@
                     {
                         <li class="nav-item mx-0 mx-lg-1"><a asp-area="" asp-controller="Project" asp-action="AllProjects">All Projects</a></li>
                     }
-                    @if (SignInManager.IsSignedIn(User))
+                    @if (SignInManager.IsSignedIn(User) && UserManager.GetUserAsync(User).Result.CompanyId != null)
                     {
                         <li class="nav-item mx-0 mx-lg-1"><a asp-area="" asp-controller="Project" asp-action="MyProjects">My Projects</a></li>
                     }
@@ -93,11 +93,15 @@
                 <!-- Footer About Text-->
                 <div class="col-lg-4">
                     <h4 class="text-uppercase mb-4">Our Mission</h4>
-                    <p class="lead mb-0">Making the bussiness easier</p>
+                    <p class="lead mb-0">Making bussiness easier</p>
                 </div>
             </div>
         </div>
     </footer>
+
+    <div class="copyright py-4 text-center text-white">
+        <div class="container"><small>Copyright © MDManagement 2020</small></div>
+    </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

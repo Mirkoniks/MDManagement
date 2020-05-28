@@ -14,6 +14,7 @@
     using Microsoft.AspNetCore.Authorization;
     using MDManagement.Services;
 
+    [Authorize]
     public class ManagementController : Controller
     {
         private readonly IEmployeeService employeeService;
@@ -171,6 +172,13 @@
             employeeDataService.ConfirmEmployee(model.EmployeeId);
 
             return RedirectToAction("UnconfirmedEmployees", "Management");
+        }
+
+        public async Task<IActionResult> RemoveAsync(string employeeId)
+        {
+           await employeeService.RemoveEmployeeFromCompany(employeeId);
+
+            return RedirectToAction("AllEmployees", "Management");
         }
     }
 }
