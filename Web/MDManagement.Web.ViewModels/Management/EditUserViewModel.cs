@@ -21,6 +21,7 @@
 
         public decimal? Salary { get; set; }
 
+        [Required]
         public string JobTitle { get; set; }
 
         [Display(Name = "Manager")]
@@ -32,6 +33,7 @@
         [Required]       
         public string Department { get; set; }
 
+        [Required]
         public string ManagerNickname { get; set; }
     }
 }

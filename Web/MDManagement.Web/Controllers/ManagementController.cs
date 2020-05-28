@@ -109,14 +109,14 @@
         [HttpGet]
         public async Task<IActionResult> EditUserAsync(string employeeId)
         {
-            var editUserViewModel = employeeService.EditUserAsync(employeeId).Result;
+             var editUserViewModel = await employeeService.EditUserAsync(employeeId);
 
             return View(editUserViewModel);
         }
 
         [Authorize(Roles = "Manager")]
         [HttpPost]
-        public IActionResult EditUser(EditUserViewModel model)
+        public async Task<IActionResult> EditUserAsync(EditUserViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -135,7 +135,7 @@
 
                 editUserServiceModel.EmployeeId = model.EmployeeId;
 
-                employeeDataService.EditUserDetailsAsync(editUserServiceModel);
+              await  employeeDataService.EditUserDetailsAsync(editUserServiceModel);
 
                 return this.RedirectToAction("Index", "Home");
             }
