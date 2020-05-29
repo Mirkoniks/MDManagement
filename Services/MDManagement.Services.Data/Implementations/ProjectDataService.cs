@@ -204,7 +204,8 @@
         public IEnumerable<EmployeeProjectServiceModel> GetEmployeeProjects(string employeeId)
         {
             var projects = data.EmployeeProjects
-                           .Where(ep => ep.EmployeeId == employeeId)
+                           .Where(ep => ep.EmployeeId == employeeId
+                                  && !ep.Project.IsCompleated)
                            .Select(ep => new EmployeeProjectServiceModel
                            {
                                ProjectId = ep.ProjectId
