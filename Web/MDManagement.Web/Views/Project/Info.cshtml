@@ -5,48 +5,54 @@
 }
 
 
-<table class="table table-primary">
-    <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Description
-            </th>
-            <th>
-                Start Date
-            </th>
-            <th>
-                End Date
-            </th>
-            <th>
-                Employees
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <th>
-                @Model.Name
-            </th>
-            <th>
-                @Model.Description
-            </th>
-            <th>
-                @Model.StartDate.Date
-            </th>
-            <th>
-                @Model.EndDate.Date
-            </th>
-            <th>
-                @foreach (var project in Model.EmployeesInProject)
-                {
+<div class="bg-primary rounded p-3 shadow">
+    <div class="row justify-content-start  p-2">
+        <h1 class="ml-4">Project Info</h1>
+    </div>
+    <hr />
+    <table class="table table-primary">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Start Date
+                </th>
+                <th>
+                    End Date
+                </th>
+                <th>
+                    Employees
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>
+                    @Model.Name
+                </th>
+                <th>
+                    @Model.Description
+                </th>
+                <th>
+                    @Model.StartDate.Date
+                </th>
+                <th>
+                    @Model.EndDate.Date
+                </th>
+                <th>
+                    @foreach (var project in Model.EmployeesInProject)
+                    {
 
-                    <p>@($"{@project.FirstName} {@project.MiddleName} {@project.LastName}")</p>
+                        <p>@($"{@project.FirstName} {@project.MiddleName} {@project.LastName}")</p>
 
-                }
-            </th>
-        <tr>
-    </tbody>
-</table>
+                    }
+                </th>
+            <tr>
+        </tbody>
+    </table>
+</div>

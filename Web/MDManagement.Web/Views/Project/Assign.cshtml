@@ -4,72 +4,79 @@
     ViewData["Title"] = "All Projects";
 }
 
-@if (Model.AllProjects.FirstOrDefault().Id != 0)
-{
-    
+    <div class="bg-primary p-4 rounded mt-xl-n5 shadow">
+        <div class="row justify-content-start">
+            <h1 class="ml-4">All tasks</h1>
+        </div>
+        <hr />
 
-    <table class="table table-primary">
-        <thead>
-            <tr>
-                <th>
-                    Name
-                </th>
-                <th>
-                    Description
-                </th>
-                <th>
-                    Start Date
-                </th>
-                <th>
-                    End Date
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var project in Model.AllProjects)
-            {
-                <tr>
-                    <th>
-                        @project.Name
-                    </th>
-                    <th>
-                        @project.Description
-                    </th>
-                    <th>
-                        @project.StartDate.Date
-                    </th>
-                    <th>
-                        @project.EndDate.Date
-                    </th>
-                    <th>
-                        <a class="btn btn-primary btn-xl " asp-controller="Project" asp-action="AssignTo" asp-route-projectId="@project.Id" asp-route-employeeId="@Model.EmployeeId">Assign</a>
-                    </th>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Name
-                </th>
-                <th>
-                    Description
-                </th>
-                <th>
-                    Start Date
-                </th>
-                <th>
-                    End Date
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-}
+        @if (Model.AllProjects.FirstOrDefault().Id != 0)
+        {
+
+
+            <table class="table table-primary">
+                <thead>
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Description
+                        </th>
+                        <th>
+                            Start Date
+                        </th>
+                        <th>
+                            End Date
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var project in Model.AllProjects)
+                    {
+                        <tr>
+                            <th>
+                                @project.Name
+                            </th>
+                            <th>
+                                @project.Description
+                            </th>
+                            <th>
+                                @project.StartDate.Date
+                            </th>
+                            <th>
+                                @project.EndDate.Date
+                            </th>
+                            <th>
+                                <a class="btn btn-primary btn-xl " asp-controller="Project" asp-action="AssignTo" asp-route-projectId="@project.Id" asp-route-employeeId="@Model.EmployeeId">Assign</a>
+                            </th>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Description
+                        </th>
+                        <th>
+                            Start Date
+                        </th>
+                        <th>
+                            End Date
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        }
+    </div>
 

@@ -4,42 +4,46 @@
     ViewData["Title"] = "Edit a Project";
 }
 
-        <form asp-action="Edit" method="post" class="bg-primary p-4 rounded mt-xl-n5">
-            <div class="form-row">
-                <div class="col-md-6">
-                    <label asp-for="Name"></label>
-                    <input asp-for="Name" class="form-control" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                </div>
-
-                <div class="col-md-6">
-                    <label asp-for="Description"></label>
-                    <input asp-for="Description" class="form-control" />
-                    <span asp-validation-for="Description" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="col-md-6">
-                    <label asp-for="StartDate"></label>
-                    <input asp-for="StartDate" class="form-control" />
-                    <span asp-validation-for="StartDate" class="text-danger"></span>
-                </div>
-
-                <div class="col-md-6">
-                    <label asp-for="EndDate"></label>
-                    <input asp-for="EndDate" class="form-control" />
-                    <span asp-validation-for="StartDate" class="text-danger"></span>
-                </div>
-            </div>
-            <div>
-                <div class="offset-md-3 col-md-6">
-                    <label asp-for="IsCompleated"></label>
-                    <input type="checkbox" asp-for="@Model.IsCompleated" />
-                </div>
+    <form asp-action="Edit" method="post" class="bg-primary p-4 rounded mt-xl-n5 shadow">
+        <div class="row justify-content-start">
+            <h1 class="ml-4">Edit current project</h1>
+        </div>
+        <hr />
+        <div class="form-row">
+            <div class="col-md-6">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
-            <input asp-for="Id" type="hidden" value="@Model.Id">
+            <div class="col-md-6">
+                <label asp-for="Description"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-6">
+                <label asp-for="StartDate"></label>
+                <input asp-for="StartDate" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
 
-            <input type="submit" class="btn btn-danger btn-xl" />
+            <div class="col-md-6">
+                <label asp-for="EndDate"></label>
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div>
+            <div class="offset-md-3 col-md-6">
+                <label asp-for="IsCompleated"></label>
+                <input type="checkbox" asp-for="@Model.IsCompleated" />
+            </div>
+        </div>
 
-        </form>
+        <input asp-for="Id" type="hidden" value="@Model.Id">
+
+        <input type="submit" class="btn btn-danger btn-xl" />
+
+    </form>

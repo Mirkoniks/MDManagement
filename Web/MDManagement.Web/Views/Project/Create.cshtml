@@ -7,8 +7,14 @@
 
    
 
-    <form asp-action="Create" method="post" class="bg-primary p-4 rounded">
+    <form asp-action="Create" method="post" class="bg-primary p-4 rounded shadow">
+       
+        <div class="row justify-content-start">
+            <h1 class="ml-4">Create new project</h1>
+        </div>
+        <hr />
         <div class="form-row bg-primary">
+           
             <div class="col-md-6">
                 <div>
                     <label asp-for="Name"></label>

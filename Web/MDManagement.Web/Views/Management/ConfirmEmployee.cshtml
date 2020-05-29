@@ -5,67 +5,77 @@
     ViewData["Title"] = "Confirm Employee";
 }
 
+    <div class="bg-primary p-5 rounded mt-xl-n5  shadow">
 
-    <form asp-action="ConfirmEmployee" method="post" class="bg-primary p-4 rounded" >
-        <div class="form-row">
-            <div class="col-md-6">
-                <label asp-for="FirstName"></label>
-                <input asp-for="FirstName" class="form-control" disabled/>
-                <span asp-validation-for="FirstName" class="text-danger"></span>
-            </div>
-            <div class="col-md-6">
-                <label asp-for="MiddleName"></label>
-                <input asp-for="MiddleName" class="form-control" disabled/>
-                <span asp-validation-for="MiddleName" class="text-danger"></span>
-            </div>
+        <div class="row justify-content-start">
+            <h1 class="ml-4">Edit current project</h1>
         </div>
-        <div class="form-row">
-            <div class="col-md-6">
-                <label asp-for="LastName"></label>
-                <input asp-for="LastName" class="form-control" disabled/>
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
-            <div class="col-md-6">
-                <label asp-for="HireDate"></label>
-                <input asp-for="HireDate" class="form-control" disabled/>
-                <span asp-validation-for="HireDate" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="col-md-6">
-                <label asp-for="HireDate"></label>
-                <input asp-for="HireDate" class="form-control" disabled/>
-                <span asp-validation-for="HireDate" class="text-danger"></span>
-            </div>
-            <div class="col-md-6">
-                <label asp-for="Salary"></label>
-                <input asp-for="Salary" class="form-control" disabled/>
-                <span asp-validation-for="Salary" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="col-md-6">
-                <label asp-for="JobTitle"></label>
-                <input asp-for="JobTitle" class="form-control" disabled/>
-                <span asp-validation-for="JobTitle" class="text-danger"></span>
-            </div>
-            <div class="col-md-6">
-                <label asp-for="Department"></label>
-                <input asp-for="Department" class="form-control" disabled/>
-                <span asp-validation-for="Department" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-row form-group">
-            <div class="offset-md-3 col-md-6 ">
-                <label asp-for="ManagerNickname"></label>
-                <input asp-for="ManagerNickname" class="form-control" />
-                <span asp-validation-for="ManagerNickname" class="text-danger"></span>
-            </div>
-        </div>
-       
-        <input type="hidden" value="@Model.EmployeeId" asp-for="EmployeeId">
+        <hr />
 
-        <div>
-            <input type="submit" class="btn btn-danger btn-xl" />
-        </div>
-    </form>
+        <form asp-action="ConfirmEmployee" method="post" class="bg-primary p-4 rounded">
+            <div class="form-row">
+                <div class="col-md-6">
+                    <label asp-for="FirstName"></label>
+                    <input asp-for="FirstName" class="form-control" disabled />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="MiddleName"></label>
+                    <input asp-for="MiddleName" class="form-control" disabled />
+                    <span asp-validation-for="MiddleName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-6">
+                    <label asp-for="LastName"></label>
+                    <input asp-for="LastName" class="form-control" disabled />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="HireDate"></label>
+                    <input asp-for="HireDate" class="form-control" disabled />
+                    <span asp-validation-for="HireDate" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-6">
+                    <label asp-for="HireDate"></label>
+                    <input asp-for="HireDate" class="form-control" disabled />
+                    <span asp-validation-for="HireDate" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Salary"></label>
+                    <input asp-for="Salary" class="form-control" disabled />
+                    <span asp-validation-for="Salary" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-6">
+                    <label asp-for="JobTitle"></label>
+                    <input asp-for="JobTitle" class="form-control" disabled />
+                    <span asp-validation-for="JobTitle" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Department"></label>
+                    <input asp-for="Department" class="form-control" disabled />
+                    <span asp-validation-for="Department" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-row ">
+                <div class="col-md-6 ">
+                    <label asp-for="ManagerNickname"></label>
+                    <input asp-for="ManagerNickname" class="form-control" />
+                    <span asp-validation-for="ManagerNickname" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 ">
+                    <input type="submit" class="btn btn-danger btn-xl mt-3" />
+                </div>
+            </div>
+
+            <input type="hidden" value="@Model.EmployeeId" asp-for="EmployeeId">
+
+            
+        </form>
+    </div>
+
+    

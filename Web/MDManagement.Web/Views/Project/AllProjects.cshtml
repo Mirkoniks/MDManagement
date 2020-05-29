@@ -5,84 +5,100 @@
     ViewData["Title"] = "All Projects";
 }
 
-<div class="row mb-5">
-    <div class="offset-md-3 col-md-6">
-        <a class="btn btn-warning btn-xl " asp-controller="Project" asp-action="Create"> Create a Project</a>
+
+<div class="bg-primary p-4 rounded mt-xl-n5 shadow">
+
+    
+    <div class="row  ">
+        <div class=" justify-content-start">
+            <h1 class="ml-4 ">All projects</h1>
+        </div>
+
+        <div class="justify-content-around">
+            <div>
+                <a class="btn btn-warning ml-5 btn-xl " asp-controller="Project" asp-action="Create"> Create a Project</a>
+            </div>
+        </div>
     </div>
+    <hr />
+
+    
+
+    @if (Model.AllProjects.Any(x => x.Id > 0) && UserManager.GetUserAsync(User).Result.CompanyId != null)
+    {
+        <table class="table table-primary">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Start Date
+                    </th>
+                    <th>
+                        End Date
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var project in Model.AllProjects)
+                {
+                    <tr>
+                        <th>
+                            @project.Name
+                        </th>
+                        <th>
+                            @project.Description
+                        </th>
+                        <th>
+                            @project.StartDate.Date
+                        </th>
+                        <th>
+                            @project.EndDate.Date
+                        </th>
+                        <th>
+                            @if (User.IsInRole("Manager"))
+                            {
+                                <a class=" btn btn-primary btn-xl" asp-action="Edit" asp-controller="Project" asp-route-projectId="@project.Id">Edit</a>
+                            }
+                        </th>
+                        <th>
+                            <a class="btn btn-primary btn-xl" asp-action="Info" asp-controller="Project" asp-route-projectId="@project.Id">Info</a>
+                        </th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+    }
+    else
+    {
+        <table class="table table-primary">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Start Date
+                    </th>
+                    <th>
+                        End Date
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    }
 </div>
 
-@if (Model.AllProjects.Any(x => x.Id > 0) && UserManager.GetUserAsync(User).Result.CompanyId != null )
-{
-<table class="table table-primary">
-    <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Description
-            </th>
-            <th>
-                Start Date
-            </th>
-            <th>
-                End Date
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var project in Model.AllProjects)
-        {
-            <tr>
-                <th>
-                    @project.Name
-                </th>
-                <th>
-                    @project.Description
-                </th>
-                <th>
-                    @project.StartDate.Date
-                </th>
-                <th>
-                    @project.EndDate.Date
-                </th>
-                <th>
-                    @if (User.IsInRole("Manager"))
-                    {
-                        <a class=" btn btn-primary btn-xl" asp-action="Edit" asp-controller="Project" asp-route-projectId="@project.Id">Edit</a>
-                    }
-                </th>
-                <th>
-                    <a class="btn btn-primary btn-xl" asp-action="Info" asp-controller="Project" asp-route-projectId="@project.Id">Info</a>
-                </th>
-            </tr>
-        }
-    </tbody>
-</table>
 
-
-}
-else
-{
-<table class="table table-primary">
-    <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Description
-            </th>
-            <th>
-                Start Date
-            </th>
-            <th>
-                End Date
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
-}
 
