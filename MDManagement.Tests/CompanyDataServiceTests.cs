@@ -37,7 +37,7 @@ namespace MDManagement.Tests
                 Assert.AreEqual("MDM", result);
             }
         }
-        
+
         [Test]
         public void DoesExistsWorks()
         {
