@@ -28,30 +28,51 @@
             this.companyDataService = companyDataService;
             this.userManager = userManager;
         }
+
+        /// <summary>
+        /// Adds compnay to a employee
+        /// </summary>
+        /// <param name="model">AddCompanyToEmployeeServiceModel is a DTO which contains the needed info for this operations</param>
         public void AddCompanyToEmployee(AddCompanyToEmployeeServiceModel model)
         {
             data.Users.Where(e => e.Id == model.EmployeeId).FirstOrDefault().CompanyId = model.CompanyId;
             data.SaveChanges();
         }
 
+        /// <summary>
+        /// Adds Job Title to employee
+        /// </summary>
+        /// <param name="addJobTitleToEmployeServiceModel">AddJobTitleToEmployeServiceModel is a DTO which contains the needed info for this operations</param>
         public void AddJobTitleToEployee(AddJobTitleToEmployeServiceModel addJobTitleToEmployeServiceModel)
         {
             data.Users.Where(e => e.Id == addJobTitleToEmployeServiceModel.EmployeeId).FirstOrDefault().JobTitleId = addJobTitleToEmployeServiceModel.JobTitleId;
             data.SaveChanges();
         }
 
+        /// <summary>
+        /// Find employee by id
+        /// </summary>
+        /// <param name="id">Employee id</param>
+        /// <returns>Employee</returns>
         public async Task<Employee> FindById(string id)
         {
             return await data.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
         }
 
-
-
-        public IEnumerable<EmployeeServiceModel> GetAllEmployees(int? companyId, string userId)
+        /// <summary>
+        /// Gets all employees and their subordinates
+        /// </summary>
+        /// <param name="companyId">Company id</param>
+        /// <param name="userId">User id</param>
+        /// <param name="userManagerId">Manager id</param>
+        /// <returns>List of EmployeeService model which is a DTO which contains the needed info for this operations</returns>
+        public IEnumerable<EmployeeServiceModel> GetAllEmployees(int? companyId, string userId, string userManagerId)
         {
+
             var user = data.Users
                 .Where(u => u.CompanyId == companyId
-                       && u.ManagerId == userId
+                       && u.ManagerId == userManagerId
+                       || u.ManagerId == userId
                        )
                 .Select(e => new EmployeeServiceModel
                 {
@@ -81,6 +102,11 @@
             return user;
         }
 
+        /// <summary>
+        /// Gets an employee for edit
+        /// </summary>
+        /// <param name="userId">user id</param>
+        /// <returns>EditUserServiceModel which is a DTO which contains the needed info for this operations</returns>
         public async Task<EditUserServiceModel> GetEmployeeByIdForEdit(string userId)
         {
             return await data.Users.Where(u => u.Id == userId)
@@ -96,9 +122,14 @@
                 .FirstOrDefaultAsync();
         }
 
+        /// <summary>
+        /// Edits user details
+        /// </summary>
+        /// <param name="model">EditUserServiceModel which is a DTO which contains the needed info for this operations</param>
+        /// <returns></returns>
         public async Task EditUserDetailsAsync(EditUserServiceModel model)
         {
-            var user =  await data.Users.Where(e => e.Id == model.EmployeeId).FirstOrDefaultAsync();
+            var user = await data.Users.Where(e => e.Id == model.EmployeeId).FirstOrDefaultAsync();
 
             user.FirstName = model.FirstName;
             user.MiddleName = model.MiddleName;
@@ -111,35 +142,54 @@
 
             if (model.IsManager)
             {
-              await userManager.RemoveFromRoleAsync(user, "Employee");
-              await  userManager.AddToRoleAsync(user, "Manager");
+                await userManager.RemoveFromRoleAsync(user, "Employee");
+                await userManager.AddToRoleAsync(user, "Manager");
             }
             else if (model.IsEmployee)
             {
-              await  userManager.RemoveFromRoleAsync(user, "Manager");
-              await userManager.AddToRoleAsync(user, "Employee");
+                await userManager.RemoveFromRoleAsync(user, "Manager");
+                await userManager.AddToRoleAsync(user, "Employee");
             }
 
 
             data.SaveChanges();
         }
 
+        /// <summary>
+        /// Checks by username if employee really exists
+        /// </summary>
+        /// <param name="userName">username</param>
+        /// <returns>Returns true if exists</returns>
         public bool Exists(string userName)
         {
             return data.Users.Any(u => u.UserName == userName);
         }
 
-
+        /// <summary>
+        /// Checks by id if employee really exists
+        /// </summary>
+        /// <param name="Id">id</param>
+        /// <returns>Returns true if exists</returns>
         public bool ExistsId(string Id)
         {
             return data.Users.Any(u => u.Id == Id);
         }
 
+        /// <summary>
+        /// Finds an employee by username
+        /// </summary>
+        /// <param name="nickName">username</param>
+        /// <returns>Employee</returns>
         public string FindByNickname(string nickName)
         {
             return data.Users.Where(u => u.UserName == nickName).FirstOrDefault().Id;
         }
 
+        /// <summary>
+        /// Gets all unconfirmed employees
+        /// </summary>
+        /// <param name="companyId">Id for the specific company</param>
+        /// <returns></returns>
         public IEnumerable<UnconfirmedEmployeeServiceModel> GetAllUnconfirmedEmployees(int? companyId)
         {
             if (companyDataService.HasEmployees(companyId))
@@ -179,6 +229,11 @@
             return users;
         }
 
+        /// <summary>
+        /// Gets unconfirmed employee
+        /// </summary>
+        /// <param name="id">Employee id</param>
+        /// <returns>UnconfirmedEmployeeServiceModel which is a DTO which contains the needed info for this operations</returns>
         public UnconfirmedEmployeeServiceModel GetUncoFirmedEmployee(string id)
         {
             var employee = data.Users
@@ -202,11 +257,21 @@
             return employee;
         }
 
+        /// <summary>
+        /// Cheks if the employee's address is null
+        /// </summary>
+        /// <param name="employeeId">Employee id</param>
+        /// <returns>Returns true if address id null</returns>
         public bool IsAddressNull(string employeeId)
         {
             return data.Users.Where(e => e.Id == employeeId).FirstOrDefault().Address == null;
         }
 
+        /// <summary>
+        /// Finds employee's username by id
+        /// </summary>
+        /// <param name="id">Employee id</param>
+        /// <returns>Employee's username</returns>
         public string FindByIdTheUserName(string id)
         {
             if (!ExistsId(id))
@@ -217,6 +282,11 @@
             return data.Users.Where(u => u.Id == id).FirstOrDefault().UserName;
         }
 
+        /// <summary>
+        /// Confirms an employee
+        /// </summary>
+        /// <param name="id">Employee id</param>
+        /// <returns></returns>
         public async Task ConfirmEmployee(string id)
         {
             data.Users.Where(u => u.Id == id)
@@ -224,9 +294,14 @@
                 .Result
                 .IsCompanyConfirmed = true;
 
-          await  data.SaveChangesAsync();
+            await data.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Removes company from an employee
+        /// </summary>
+        /// <param name="emplolyeeId">Employee id</param>
+        /// <returns></returns>
         public async Task RemoveEmployeeCompany(string emplolyeeId)
         {
             data.Users.Where(e => e.Id == emplolyeeId)
@@ -237,7 +312,11 @@
             await data.SaveChangesAsync();
         }
 
-
+        /// <summary>
+        /// Removes Manager from an employee
+        /// </summary>
+        /// <param name="emplolyeeId">Employee id</param>
+        /// <returns></returns>
         public async Task RemoveEmployeeMnager(string emplolyeeId)
         {
             data.Users.Where(e => e.Id == emplolyeeId)
@@ -247,6 +326,12 @@
 
             await data.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// Removes deparment from an employee
+        /// </summary>
+        /// <param name="emplolyeeId">Employee id</param>
+        /// <returns></returns>
         public async Task RemoveEmployeeDepartmentAsync(string emplolyeeId)
         {
             data.Users.Where(e => e.Id == emplolyeeId)
@@ -256,6 +341,12 @@
 
             await data.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// Removes Job Title from an employee
+        /// </summary>
+        /// <param name="emplolyeeId">Employee id</param>
+        /// <returns></returns>
         public async Task RemoveEmployeeJobTitle(string emplolyeeId)
         {
             data.Users.Where(e => e.Id == emplolyeeId)
@@ -266,6 +357,11 @@
             await data.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Removes Company confirmation from an employee
+        /// </summary>
+        /// <param name="emplolyeeId">Employee id</param>
+        /// <returns></returns>
         public async Task RemoveEmployeeCompanyConfirmantion(string emplolyeeId)
         {
             data.Users.Where(e => e.Id == emplolyeeId)
@@ -275,6 +371,12 @@
 
             await data.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// Removes all projects from an employee
+        /// </summary>
+        /// <param name="emplolyeeId">Employee id</param>
+        /// <returns></returns>
         public async Task RemoveEmployeeProjects(string emplolyeeId)
         {
             var employeesToDelete = data.EmployeeProjects.
@@ -285,9 +387,14 @@
                 data.EmployeeProjects.Remove(employee);
             }
 
-           await data.SaveChangesAsync();
+            await data.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Gets employee's salary
+        /// </summary>
+        /// <param name="employeeId">Employee id</param>
+        /// <returns></returns>
         public decimal? GetEmployeeSalary(string employeeId)
         {
             return data.Users.Where(u => u.Id == employeeId)
@@ -296,16 +403,42 @@
                 .Salary;
         }
 
+        /// <summary>
+        /// Sets employee's manager
+        /// </summary>
+        /// <param name="managerId">Manger id</param>
+        /// <param name="userId">User id</param>
+        /// <returns></returns>
         public async Task SetManager(string managerId, string userId)
         {
             data.Users.Where(e => e.Id == userId)
                 .FirstOrDefaultAsync()
                 .Result
                 .ManagerId = managerId;
-                
-          await data.SaveChangesAsync();
+
+            await data.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Remove all roles from an emoployee
+        /// </summary>
+        /// <param name="employeeId">Employee id</param>
+        /// <returns></returns>
+        public async Task RemoveRoles(string employeeId)
+        {
+            var user = await data.Users
+                      .Where(u => u.Id == employeeId)
+                      .FirstOrDefaultAsync();
+
+            if (await userManager.IsInRoleAsync(user, "Manager"))
+            {
+                await userManager.RemoveFromRoleAsync(user, "Manager");
+            }
+            else if (await userManager.IsInRoleAsync(user, "Employee"))
+            {
+                await userManager.RemoveFromRoleAsync(user, "Employee");
+            }
+        }
 
 
         //public void AddEmployeeToCompany(string employeeId, string companyCode)

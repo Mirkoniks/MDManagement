@@ -17,6 +17,10 @@
             this.data = data;
         }
 
+        /// <summary>
+        /// Creates a town
+        /// </summary>
+        /// <param name="town">CreateTownServiceModel which is a DTO which contains the needed info for this operations</param>
         public void Create(CreateTownServiceModel town)
         {
             var townToAdd = new Town()
@@ -30,11 +34,21 @@
             data.SaveChanges();
         }
 
+        /// <summary>
+        /// Checks if town exists
+        /// </summary>
+        /// <param name="townName">Town name</param>
+        /// <returns></returns>
         public bool Exists(string townName)
         {
             return data.Towns.Any(t => t.Name.ToLower() == townName.ToLower());
         }
 
+        /// <summary>
+        /// Finds a town by id
+        /// </summary>
+        /// <param name="id">Town id</param>
+        /// <returns>TownServiceModel which is a DTO which contains the needed info for this operations</returns>
         public TownServiceModel FindById(int id)
         {
             var town = data.Towns
@@ -50,6 +64,11 @@
             return town;
         }
 
+        /// <summary>
+        /// Finds a tonw by name
+        /// </summary>
+        /// <param name="name">Town name</param>
+        /// <returns>TownServiceModel which is a DTO which contains the needed info for this operations</returns>
         public TownServiceModel FindByName(string name)
         {
             return data.Towns

@@ -21,6 +21,11 @@ namespace MDManagement.Services.Implementations
             this.userManager = userManager;
         }
 
+        /// <summary>
+        /// Adds job title to an employee
+        /// </summary>
+        /// <param name="name">Job title name</param>
+        /// <param name="user">user</param>
         public void AddJobTitle(string name, ClaimsPrincipal user)
         {
             if (!jobTitleDataService.Exists(name))

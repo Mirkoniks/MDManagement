@@ -91,7 +91,7 @@
 
                 projectDataService.Create(project);
 
-                return View();
+                return RedirectToAction("AllProjects", "Project");
             }
 
             return View(model);

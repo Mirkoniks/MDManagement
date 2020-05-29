@@ -13,7 +13,7 @@
 
         public Task<Employee> FindById(string id);
 
-        public IEnumerable<EmployeeServiceModel> GetAllEmployees(int? companyId,string userId);
+        public IEnumerable<EmployeeServiceModel> GetAllEmployees(int? companyId, string userId, string userManagerId);
 
         public Task<EditUserServiceModel> GetEmployeeByIdForEdit(string userId);
 
@@ -50,6 +50,9 @@
         public decimal? GetEmployeeSalary(string employeeId);
 
         public Task SetManager(string managerId, string userId);
+
+        public Task RemoveRoles(string employeeId);
+
 
         //public void AddEmployeeToCompany(string employeeId, string companyCode);
 

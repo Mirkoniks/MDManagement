@@ -14,6 +14,10 @@ namespace MDManagement.Services.Data.Implementations
             this.data = data;
         }
 
+        /// <summary>
+        /// Adds address to a employee
+        /// </summary>
+        /// <param name="info">Service model which contains the needed info</param>
         public void AddEmployeeToAddress(AddEmployeeToAddressServiceModel info)
         {
             data.Addresses.Where(a => a.Id == info.AddressId).FirstOrDefault().EmployeeId = info.EmployeeId;
@@ -21,6 +25,11 @@ namespace MDManagement.Services.Data.Implementations
             data.SaveChanges();
         }
 
+
+        /// <summary>
+        /// Creates an address
+        /// </summary>
+        /// <param name="address">Service model which creastes an address</param>
         public void Create(CreateAddressServiceModel address)
         {
             var addressToAdd = new Address()
@@ -34,6 +43,11 @@ namespace MDManagement.Services.Data.Implementations
             data.SaveChanges();
         }
 
+        /// <summary>
+        /// Finds an addres 
+        /// </summary>
+        /// <param name="id">Address id</param>
+        /// <returns>Address service model with the needen info</returns>
         public AddressServiceModel FindById(int id)
         {
             var address = data.Addresses.Where(a => a.Id == id)
@@ -47,7 +61,11 @@ namespace MDManagement.Services.Data.Implementations
 
             return address;
         }
-
+        /// <summary>
+        /// Finds an address by name
+        /// </summary>
+        /// <param name="addressText">Address text</param>
+        /// <returns>Address service model with the needen info</returns>
         public AddressServiceModel FindByName(string addressText)
         {
             return data.Addresses.Where(a => a.AddressText == addressText)

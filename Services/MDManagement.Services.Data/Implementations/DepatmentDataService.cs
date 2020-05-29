@@ -14,6 +14,10 @@
             this.data = data;
         }
 
+        /// <summary>
+        /// Creates an Department
+        /// </summary>
+        /// <param name="name">Department name</param>
         public void Create(string name)
         {
             var department = new Department()
@@ -26,17 +30,31 @@
             data.SaveChanges();
         }
 
+        /// <summary>
+        /// Checks by department name if company really exists 
+        /// </summary>
+        /// <param name="departmentName">Department name</param>
+        /// <returns>Returns true if exists</returns>
         public bool Exists(string departmentName)
         {
             return data.Departments.Any(d => d.Name.ToLower() == departmentName.ToLower());
         }
-
+        /// <summary>
+        /// Checks by department name if company really exists 
+        /// </summary>
+        /// <param name="id">Department id</param>
+        /// <returns>Returns true if exists</returns>
         public bool Exists(int? id)
         {
             return data.Departments.Any(d => d.Id == id);
 
         }
 
+        /// <summary>
+        /// Finds a Department by id
+        /// </summary>
+        /// <param name="id">Department id</param>
+        /// <returns>DepartmentServiceModel which contains the needed info</returns>
         public DepartmentServiceModel FindById(int? id)
         {
             if (!Exists(id))
@@ -58,6 +76,11 @@
                 .FirstOrDefault();
         }
 
+        /// <summary>
+        /// Finds a Department by name
+        /// </summary>
+        /// <param name="name">Department name</param>
+        /// <returns>DepartmentServiceModel which contains the needed info</returns>
         public DepartmentServiceModel FindByName(string name)
         {
             return data.Departments

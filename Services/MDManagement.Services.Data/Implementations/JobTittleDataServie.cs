@@ -16,6 +16,11 @@
             this.data = data;
         }
 
+        /// <summary>
+        /// Find a job tile by id
+        /// </summary>
+        /// <param name="id">Job title id</param>
+        /// <returns>JobTitleServiceModel which is a DTO which contains the needed info for this operations</returns>
         public JobTitleServiceModel FindById(int? id)
         {
             var jtsm = new JobTitleServiceModel();
@@ -38,6 +43,12 @@
             return jtsm;
         }
 
+
+        /// <summary>
+        /// Finds a job title by name
+        /// </summary>
+        /// <param name="name">Job title name</param>
+        /// <returns>JobTitleServiceModel which is a DTO which contains the needed info for this operations</returns>
         public JobTitleServiceModel FindByName(string name)
         {
             var jobTile = data.JobTitles.Where(jt => jt.Name.ToLower() == name.ToLower()).FirstOrDefault();
@@ -52,6 +63,10 @@
             return jtsm;
         }
 
+        /// <summary>
+        /// Creates a Job Tile  
+        /// </summary>
+        /// <param name="name">Job title name</param>
         public void CreateJobTitile(string name)
         {
             JobTitle jobTitleToAdd = new JobTitle()
@@ -64,11 +79,21 @@
             data.SaveChanges();
         }
 
+        /// <summary>
+        /// Checks by name if job title exists
+        /// </summary>
+        /// <param name="jobTitle">Job title name</param>
+        /// <returns></returns>
         public bool Exists(string jobTitle)
         {
             return data.JobTitles.Any(j => j.Name.ToLower() == jobTitle.ToLower());
         }
 
+        /// <summary>
+        /// Checks by id if job title exists
+        /// </summary>
+        /// <param name="jobId">Job title id</param>
+        /// <returns></returns>
         public bool Exists(int? jobId)
         {
             return data.JobTitles.Any(j => j.Id == jobId);

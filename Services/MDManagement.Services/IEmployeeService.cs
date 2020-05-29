@@ -9,7 +9,7 @@
     {
         public Task AddManagerRole(ClaimsPrincipal thisUser);
 
-        public AllEployeesViewModel GetAllEmployees(int? companyId, string userId);
+        public AllEployeesViewModel GetAllEmployees(int? companyId, string userId, string userManagerId);
 
         public Task<EditUserViewModel> EditUserAsync(string employeeId);
 

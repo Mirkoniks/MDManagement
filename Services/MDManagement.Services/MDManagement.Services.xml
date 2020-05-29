@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MDManagement.Services</name>
+    </assembly>
+    <members>
+        <member name="M:MDManagement.Services.Implementations.ComapnyService.Register(MDManagement.Services.Models.Company.CreateCompanyServiceModel)">
+            <summary>
+            Creates a company
+            </summary>
+            <param name="model">CreateCompanyServiceModel which is a DTO which contains the needed info for this operations</param>
+        </member>
+        <member name="M:MDManagement.Services.Implementations.ComapnyService.FindByName(System.String)">
+            <summary>
+            Finds a company by name
+            </summary>
+            <param name="name">Company name</param>
+            <returns>CompanyServiceModel which is a DTO which contains the needed info for this operations</returns>
+        </member>
+        <member name="M:MDManagement.Services.Implementations.ComapnyService.Exists(System.String)">
+            <summary>
+            Checks by company name if a company exists
+            </summary>
+            <param name="companyName">Company name</param>
+            <returns>Returns true if exists</returns>
+        </member>
+        <member name="M:MDManagement.Services.Implementations.EmployeeService.AddManagerRole(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Adds manager role
+            </summary>
+            <param name="thisUser">User</param>
+            <returns></returns>
+        </member>
+        <member name="M:MDManagement.Services.Implementations.EmployeeService.GetAllEmployees(System.Nullable{System.Int32},System.String,System.String)">
+            <summary>
+            Gets all employees of a company
+            </summary>
+            <param name="companyId">Compamny id</param>
+            <param name="userId">user id </param>
+            <param name="userManagerId"> manager id </param>
+            <returns></returns>
+        </member>
+        <member name="M:MDManagement.Services.Implementations.EmployeeService.EditUserAsync(System.String)">
+            <summary>
+            Edits a user
+            </summary>
+            <param name="employeeId">Employee id</param>
+            <returns></returns>
+        </member>
+        <member name="M:MDManagement.Services.Implementations.EmployeeService.EditUser(MDManagement.Web.ViewModels.Management.EditUserViewModel)">
+            <summary>
+            Creates View model for the acion
+            </summary>
+            <param name="model">EditUserViewModel which is a DTO which contains the needed info for this operations</param>
+            <returns> EditUserServiceModel which is a DTO which contains the needed info for this operations</returns>
+        </member>
+        <member name="M:MDManagement.Services.Implementations.EmployeeService.ConfirmEmployee(System.String)">
+            <summary>
+            Creates a view model for all unconfirmed employees
+            </summary>
+            <param name="employeeId">Employee id</param>
+            <returns>ConfirmEmployeeViewModel which is a DTO which contains the needed info for this operations</returns>
+        </member>
+        <member name="M:MDManagement.Services.Implementations.EmployeeService.RemoveEmployeeFromCompany(System.String)">
+            <summary>
+            Removes all company associated things from an employee of a specific company
+            </summary>
+            <param name="employeeId">employee id </param>
+            <returns></returns>
+        </member>
+        <member name="M:MDManagement.Services.Implementations.JobTitleService.AddJobTitle(System.String,System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Adds job title to an employee
+            </summary>
+            <param name="name">Job title name</param>
+            <param name="user">user</param>
+        </member>
+    </members>
+</doc>

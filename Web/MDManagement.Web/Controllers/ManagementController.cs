@@ -95,12 +95,13 @@
         }
 
         [Authorize(Roles = "Manager")]
-        public IActionResult AllEmployees()
+        public async Task<IActionResult> AllEmployeesAsync()
         {
-            var userCompanyId = userManager.GetUserAsync(this.User).Result.CompanyId;
+            var userCompanyId = await userManager.GetUserAsync(this.User);
             var userId = userManager.GetUserId(this.User);
+            var userManagerId = await userManager.GetUserAsync(User);
 
-            var allEmployeesViewModel = employeeService.GetAllEmployees(userCompanyId, userId);
+            var allEmployeesViewModel = employeeService.GetAllEmployees(userCompanyId.CompanyId, userId, userManagerId.ManagerId);
 
             return View(allEmployeesViewModel);
         }

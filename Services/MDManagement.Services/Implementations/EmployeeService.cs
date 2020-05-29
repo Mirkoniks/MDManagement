@@ -44,6 +44,11 @@
             this.userManager = userManager;
         }
 
+        /// <summary>
+        /// Adds manager role
+        /// </summary>
+        /// <param name="thisUser">User</param>
+        /// <returns></returns>
         public async Task AddManagerRole(ClaimsPrincipal thisUser)
         {
             string roleName = "Manager";
@@ -64,11 +69,18 @@
             await userManager.AddToRoleAsync(user, "Manager");
         }
 
-        public AllEployeesViewModel GetAllEmployees(int? companyId, string userId)
+        /// <summary>
+        /// Gets all employees of a company
+        /// </summary>
+        /// <param name="companyId">Compamny id</param>
+        /// <param name="userId">user id </param>
+        /// <param name="userManagerId"> manager id </param>
+        /// <returns></returns>
+        public AllEployeesViewModel GetAllEmployees(int? companyId, string userId, string userManagerId)
         {
             var allEmployeesViewModel = new AllEployeesViewModel()
             {
-                Employees = employeeDataService.GetAllEmployees(companyId, userId)
+                Employees = employeeDataService.GetAllEmployees(companyId, userId, userManagerId)
                 .Select(e => new EmployeeViewModel
                 {
                     EmployeeId = e.EmployeeId,
@@ -98,6 +110,11 @@
             return allEmployeesViewModel;
         }
 
+        /// <summary>
+        /// Edits a user
+        /// </summary>
+        /// <param name="employeeId">Employee id</param>
+        /// <returns></returns>
         public async Task<EditUserViewModel> EditUserAsync(string employeeId)
         {
             var employee = await employeeDataService.FindById(employeeId);
@@ -121,6 +138,11 @@
             return editUserViewModel;
         }
 
+        /// <summary>
+        /// Creates View model for the acion
+        /// </summary>
+        /// <param name="model">EditUserViewModel which is a DTO which contains the needed info for this operations</param>
+        /// <returns> EditUserServiceModel which is a DTO which contains the needed info for this operations</returns>
         public EditUserServiceModel EditUser(EditUserViewModel model)
         {
             var editUserServiceModel = new EditUserServiceModel()
@@ -185,6 +207,11 @@
             return allUnconfirmedEmployeesViewModel;
         }
 
+        /// <summary>
+        /// Creates a view model for all unconfirmed employees
+        /// </summary>
+        /// <param name="employeeId">Employee id</param>
+        /// <returns>ConfirmEmployeeViewModel which is a DTO which contains the needed info for this operations</returns>
         public ConfirmEmployeeViewModel ConfirmEmployee(string employeeId)
         {
             var user = employeeDataService.GetUncoFirmedEmployee(employeeId);
@@ -207,6 +234,11 @@
             return UnconfirmedEmployeeViewModel;
         }
 
+        /// <summary>
+        /// Removes all company associated things from an employee of a specific company
+        /// </summary>
+        /// <param name="employeeId">employee id </param>
+        /// <returns></returns>
         public async Task RemoveEmployeeFromCompany(string employeeId)
         {
             await employeeDataService.RemoveEmployeeCompany(employeeId);
@@ -215,8 +247,8 @@
             await employeeDataService.RemoveEmployeeJobTitle(employeeId);
             await employeeDataService.RemoveEmployeeMnager(employeeId);
             await employeeDataService.RemoveEmployeeProjects(employeeId);
+            await employeeDataService.RemoveRoles(employeeId);
         }
-
     }
 }
 

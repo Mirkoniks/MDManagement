@@ -21,6 +21,11 @@
             this.employeeDataService = employeeDataService;
         }
 
+        /// <summary>
+        /// Gets all company projects
+        /// </summary>
+        /// <param name="companyId">Company id</param>
+        /// <returns>List of EmployeeProjectServiceModel which is a DTO which contains the needed info for this operations</returns>
         public IEnumerable<EmployeeProjectServiceModel> GetAllProjects(int? companyId)
         {
             var model = data.EmployeeProjects
@@ -36,7 +41,11 @@
             return model;
         }
 
-
+        /// <summary>
+        /// Finds a proejct by id
+        /// </summary>
+        /// <param name="id">Project id</param>
+        /// <returns>ProjectServiceModel which is a DTO which contains the needed info for this operations</returns>
         public ProjectServiceModel FindProjectById(int id)
         {
             var project = data.Projects
@@ -55,7 +64,10 @@
             return project;
         }
 
-
+        /// <summary>
+        /// Creates a project
+        /// </summary>
+        /// <param name="model">Project name</param>
         public void Create(ProjectServiceModel model)
         {
             var project = new Project
@@ -81,6 +93,10 @@
             data.SaveChanges();
         }
 
+        /// <summary>
+        /// Joinig a project 
+        /// </summary>
+        /// <param name="model">JoinServiceModel which is a DTO which contains the needed info for this operations</param>
         public void Join(JoinServiceModel model)
         {
             var employeeProject = new EmployeeProject
@@ -90,6 +106,11 @@
             };
         }
 
+        /// <summary>
+        /// Finds a project by project code
+        /// </summary>
+        /// <param name="projectCode">Project code</param>
+        /// <returns></returns>
         public Project FindByCode(string projectCode)
         {
             var project = data.Projects
@@ -99,11 +120,21 @@
             return project;
         }
 
+        /// <summary>
+        /// Checks by project code if project really exists
+        /// </summary>
+        /// <param name="projectCode">Project code</param>
+        /// <returns>Returns true if exists</returns>
         public bool Exists(string projectCode)
         {
             return data.Projects.Any(p => p.ProjectCode == projectCode);
         }
 
+        /// <summary>
+        /// Gets all projects with employees in it
+        /// </summary>
+        /// <param name="projectId">Project id</param>
+        /// <returns>Returns employees ids</returns>
         public IEnumerable<string> GetAllEmployeesInProject(int projectId)
         {
             var employees = data.EmployeeProjects
@@ -114,6 +145,11 @@
             return employees;
         }
 
+        /// <summary>
+        /// Assigns an employee to a project
+        /// </summary>
+        /// <param name="employeeId">Employee id</param>
+        /// <param name="projectId">Project id</param>
         public void Assign(string employeeId, int projectId)
         {
             var model = new EmployeeProject
@@ -126,6 +162,13 @@
 
             data.SaveChanges();
         }
+
+        /// <summary>
+        /// Checks if an employes is in a projects
+        /// </summary>
+        /// <param name="employeeId">Employee id</param>
+        /// <param name="projectId">Project id</param>
+        /// <returns>Returns true if it is</returns>
         public bool IsEmployeeInProject(string employeeId, int projectId)
         {
             var result = data.EmployeeProjects
@@ -135,6 +178,11 @@
             return result;
         }
 
+
+        /// <summary>
+        /// Edits a project
+        /// </summary>
+        /// <param name="model">ProjectServiceModel which is a DTO which contains the needed info for this operations</param>
         public void Edit(ProjectServiceModel model)
         {
             var project = data.Projects.Where(p => p.Id == model.Id).FirstOrDefault();
@@ -148,6 +196,11 @@
             data.SaveChanges();
         }
 
+        /// <summary>
+        /// Gets all projects of an employee
+        /// </summary>
+        /// <param name="employeeId">Employee id</param>
+        /// <returns>List of EmployeeProjectServiceModel which is a DTO which contains the needed info for this operations</returns>
         public IEnumerable<EmployeeProjectServiceModel> GetEmployeeProjects(string employeeId)
         {
             var projects = data.EmployeeProjects
