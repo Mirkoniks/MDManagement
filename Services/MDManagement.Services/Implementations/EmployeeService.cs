@@ -248,6 +248,7 @@
             await employeeDataService.RemoveEmployeeMnager(employeeId);
             await employeeDataService.RemoveEmployeeProjects(employeeId);
             await employeeDataService.RemoveRoles(employeeId);
+            await employeeDataService.RemoveMangers(employeeId);
         }
     }
 }

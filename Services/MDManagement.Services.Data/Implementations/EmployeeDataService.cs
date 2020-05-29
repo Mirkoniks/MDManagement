@@ -391,6 +391,28 @@
         }
 
         /// <summary>
+        /// Removes managers
+        /// </summary>
+        /// <param name="employeeId">Employee id</param>
+        /// <returns></returns>
+        public async Task RemoveMangers(string employeeId)
+        {
+            var employees = await data.Users.
+                Where(e => e.ManagerId == employeeId)
+                .ToListAsync();
+
+            foreach (var employee in employees)
+            {
+                var employeeToRemove = await data.Users.Where(e => e.Id == employee.Id)
+                        .FirstOrDefaultAsync();
+
+                employeeToRemove.ManagerId = null;
+            }
+
+            await data.SaveChangesAsync();
+        }
+
+        /// <summary>
         /// Gets employee's salary
         /// </summary>
         /// <param name="employeeId">Employee id</param>

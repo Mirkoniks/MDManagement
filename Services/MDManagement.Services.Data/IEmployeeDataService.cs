@@ -53,6 +53,8 @@
 
         public Task RemoveRoles(string employeeId);
 
+        public  Task RemoveMangers(string employeeId);
+
 
         //public void AddEmployeeToCompany(string employeeId, string companyCode);
 
